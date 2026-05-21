@@ -14,5 +14,6 @@ public class TaskStatus{
     @Column(name = "status_id")
     private long id;
 
-    private String status_name;
+    @Column(name = "status_name")
+    private String statusName;
 }

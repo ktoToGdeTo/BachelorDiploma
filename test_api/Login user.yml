@@ -1,0 +1,22 @@
+info:
+  name: Login user
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/auth/login"
+  body:
+    type: form-urlencoded
+    data:
+      - name: username
+        value: ryanGosling111
+      - name: password
+        value: "67"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

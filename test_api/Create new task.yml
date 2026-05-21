@@ -1,0 +1,23 @@
+info:
+  name: Create new task
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/tasks"
+  body:
+    type: json
+    data: |-
+      {
+        "title":"Task67",
+        "description":"My top description",
+        "status":"CLOSED"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

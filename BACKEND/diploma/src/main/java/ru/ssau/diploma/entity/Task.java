@@ -22,17 +22,19 @@ public class Task {
 
     private String description;
 
-    private LocalDateTime created_time;
+    @Column(name = "created_time")
+    private LocalDateTime createdTime;
 
-    private LocalDateTime changed_time;
+    @Column(name = "changed_time")
+    private LocalDateTime changedTime;
     
     @Enumerated(EnumType.STRING)
     @ManyToOne
     @JoinColumn(name = "status")
     private TaskStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
     private User user;
 
 
