@@ -39,12 +39,14 @@
     </div>
   </div>
 </nav> -->
+@if (auth.isAuthenticated$ | async) {
 <div class="app-layout">
-  @if (auth.isAuthenticated$ | async) {
   <app-sidebar-component></app-sidebar-component>
-  }
   <main class="main-content">
     <router-outlet />
   </main>
-
 </div>
+}
+@else {
+  <router-outlet />
+}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../core/services/task-service';
@@ -19,6 +19,7 @@ export class EditAddTaskComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private taskService = inject(TaskService);
+  private cd = inject(ChangeDetectorRef);
 
   statusOptions = [
     { value: 'OPEN', label: 'Открыто' },
@@ -67,6 +68,7 @@ export class EditAddTaskComponent implements OnInit {
         this.updateTask();
       }
     }
+    this.cd.markForCheck();
   }
   createTask() {
     const newTask: Task = {

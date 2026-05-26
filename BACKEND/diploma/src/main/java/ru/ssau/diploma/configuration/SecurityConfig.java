@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/status").authenticated()
                         .requestMatchers("/login", "/users/register", "/logout").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/tasks/{id}").hasRole("MODERATOR")
                         .requestMatchers(HttpMethod.DELETE, "/tasks/{id}", "/delete/{username}").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())

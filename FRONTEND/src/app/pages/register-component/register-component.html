@@ -1,44 +1,45 @@
-<div class="auth-container">
-  <div class="auth-card">
+<div class="auth-wrapper">
+  <div class="auth-card auth-card--wide">
     <div class="auth-header">
-      <h2 class="auth-title">Вход в TaskCracker</h2>
-      <p class="auth-subtitle">Введите свои данные для продолжения</p>
+      <div class="auth-logo"></div>
+      <h2 class="auth-title">Регистрация</h2>
+      <p class="auth-subtitle">Создайте аккаунт, чтобы начать работу</p>
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
-      
-      <div class="form-field">
-        <label for="username">Логин</label>
-        <input id="username" formControlName="username" type="text" placeholder="Логин" autocomplete="username" />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName" class="form-label">Имя</label>
+          <input id="firstName" formControlName="firstName" type="text" placeholder="Иван" autocomplete="given-name" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label for="lastName" class="form-label">Фамилия</label>
+          <input id="lastName" formControlName="lastName" type="text" placeholder="Иванов" autocomplete="family-name" class="form-input" />
+        </div>
       </div>
 
-      <div class="form-field">
-        <label for="password">Пароль</label>
-        <input id="password" formControlName="password" type="password" placeholder="Пароль" autocomplete="current-password" />
+      <div class="form-group">
+        <label for="username" class="form-label">Логин</label>
+        <input id="username" formControlName="username" type="text" placeholder="Придумайте логин" autocomplete="username" class="form-input" />
       </div>
 
-      <div class="form-field">
-        <label for="firstName">Имя</label>
-        <input id="firstName" formControlName="firstName" type="text" placeholder="Имя" autocomplete="firstName" />
+      <div class="form-group">
+        <label for="password" class="form-label">Пароль</label>
+        <input id="password" formControlName="password" type="password" placeholder="Минимум 6 символов" autocomplete="new-password" class="form-input" />
       </div>
 
-      <div class="form-field">
-        <label for="lastName">Фамилия</label>
-        <input id="lastName" formControlName="lastName" type="text" placeholder="Фамилия" autocomplete="lastName" />
+      <div class="form-group">
+        <label for="birthDate" class="form-label">Дата рождения</label>
+        <input id="birthDate" formControlName="birthDate" type="date" class="form-input" />
       </div>
 
-      <div class="form-field">
-        <label for="birthDate">Дата рождения</label>
-        <input id="birthDate" formControlName="birthDate" type="date" value="1999-01-01" />
-      </div>
-
-      <button type="submit" [disabled]="registerForm.invalid" class="btn btn-pink-submit">
+      <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary btn-full">
         Зарегистрироваться
       </button>
-
     </form>
-    <div>
-      <p>Есть аккаунт? <a href="/login">Войдите!</a></p>
+
+    <div class="auth-footer">
+      <p>Уже есть аккаунт? <a href="/login" class="link-primary">Войти</a></p>
     </div>
   </div>
 </div>

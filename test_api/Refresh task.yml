@@ -4,8 +4,16 @@ info:
   seq: 11
 
 http:
-  method: GET
-  url: "{{BASE_URL}}/1"
+  method: PUT
+  url: "{{BASE_URL}}/tasks/1"
+  body:
+    type: json
+    data: |-
+      {
+        "title":"My first task",
+        "description":"lol",
+        "status":"CLOSED"
+      }
   auth: inherit
 
 settings:

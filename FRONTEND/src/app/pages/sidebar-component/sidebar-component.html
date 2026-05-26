@@ -1,4 +1,4 @@
-<aside class="pink-sidebar">
+<aside class="blue-sidebar">
   <!-- Шапка сайдбара -->
   <div class="sidebar-header">
     <a routerLink="/" class="sidebar-brand">
@@ -6,40 +6,64 @@
     </a>
   </div>
 
-  <!-- Навигация -->
-  <nav class="sidebar-nav">
-    @if (auth.isAuthenticated$ | async) {
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a class="nav-link pink-link" routerLink="/tasks" routerLinkActive="active-link">Задачи</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link pink-link" routerLink="/tasks/new" routerLinkActive="active-link">Создать задачу</a>
-        </li>
-        
-        @if (auth.hasRoles(['ROLE_ADMIN'])) {
+  <!-- Центральная скроллируемая область -->
+  <div class="sidebar-content">
+    
+    <!-- Главное меню -->
+    <nav class="sidebar-nav">
+      @if (authService.isAuthenticated$ | async) {
+        <ul class="nav-list">
           <li class="nav-item">
-            <a class="nav-link pink-link" routerLink="/users/all" routerLinkActive="active-link">Все пользователи</a>
+            <a class="nav-link" routerLink="/tasks" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+              <span class="link-icon">📋</span> Задачи
+            </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/tasks/new" routerLinkActive="active-link">
+              <span class="link-icon">➕</span> Создать задачу
+            </a>
+          </li>
+          
+          @if (authService.hasRoles(['ROLE_ADMIN'])) {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/users/all" routerLinkActive="active-link">
+                <span class="link-icon">👥</span> Все пользователи
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </nav>
+
+    <!-- Секция последних задач -->
+    <div class="sidebar-section">
+      <h3 class="section-title">Последние задачи</h3>
+      <ul class="task-list">
+        @for (task of sidebarTasks; track task.id) {
+          <li class="task-item" (click)="navigateToTask(task.id)">
+            <span class="status-dot" [style.background-color]="getStatusColor(task.status)"></span>
+            <span class="task-title" [title]="task.title">{{ task.title }}</span>
+          </li>
+        } @empty {
+          <li class="task-item empty">Нет активных задач</li>
         }
       </ul>
-    }
-  </nav>
+    </div>
+  </div>
 
-  <!-- Футер сайдбара (профиль + выход) -->
+  <!-- Футер: Профиль и выход -->
   <div class="sidebar-footer">
-    @if (auth.isAuthenticated$ | async) {
-      <div class="user-info">
-        <span class="username">{{ auth.getCurrentUser()?.username }}</span>
-        <!-- Форматируем роли для читаемости -->
-        <span class="roles">{{ displayRoles }}</span>
+    @if (authService.isAuthenticated$ | async) {
+      <div class="user-card">
+        <div class="user-name">{{ authService.getCurrentUser()?.username }}</div>
+        <div class="user-roles">{{ displayRoles }}</div>
       </div>
-      <button class="btn-pink btn-logout" (click)="logout()">
-        <i class="bi bi-box-arrow-right"></i> Выход
+      <button class="btn-sidebar btn-logout" (click)="logout()">
+        <span class="btn-icon">🚪</span> Выйти
       </button>
     } @else {
-      <a routerLink="/login" class="btn-pink btn-login">
-        <i class="bi bi-box-arrow-in-right"></i> Вход
+      <a routerLink="/login" class="btn-sidebar btn-login">
+        <span class="btn-icon">🔑</span> Войти
       </a>
     }
   </div>

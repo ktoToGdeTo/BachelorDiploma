@@ -122,4 +122,25 @@ export class AuthService {
     return userRole ? roles.includes(userRole) : false;
   }
 
+  public assignRole(username: string, role: string): Observable<any>{
+    const body = {username, role}
+
+    return this.http.post(`${this.url}/admin/assign`, body, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      withCredentials: true 
+    }).pipe(
+      catchError((error) => {
+        if (error.status === 401) {
+          alert('Неизвестная ошибка');
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public deAssignRole(username: string, role: string): Observable<any>{
+    const body = {username, role}
+    return this.http.delete(`${this.url}/admin/assign`+username);
+  }
+
 }

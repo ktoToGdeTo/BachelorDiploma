@@ -1,36 +1,60 @@
 <div class="task-form-container">
-  <div class="task-card">
-    <h2 class="form-heading">
-      {{ isCreateMode ? 'Создание задачи' : 'Редактирование задачи' }}
-    </h2>
+  <div class="form-card">
+    <div class="form-header">
+      <h2 class="form-title">{{ isCreateMode ? 'Создание задачи' : 'Редактирование задачи' }}</h2>
+    </div>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="taskForm" class="pink-form">
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
       
-      <div class="form-field">
-        <label for="title">Название</label>
-        <input id="title" formControlName="title" type="text" placeholder="Введите название задачи" />
+      <!-- Название -->
+      <div class="form-group">
+        <label for="title" class="form-label">Название задачи</label>
+        <input 
+          id="title" 
+          formControlName="title" 
+          type="text" 
+          placeholder="Например: Исправить баг в авторизации" 
+          class="form-input"
+        />
+        <span class="form-hint">Обязательное поле, минимум 3 символа</span>
       </div>
 
-      <div class="form-field">
-    <label for="description">Описание</label>
-    <textarea id="description" formControlName="description" placeholder="Введите подробное описание задачи..." rows="5"></textarea>
-  </div>
-
-      <div class="form-field">
-        <label for="status">Статус</label>
-        <select id="status" formControlName="status">
-          <option value="" disabled>Выберите статус</option>
-          @for (s of statusOptions; track $index) {
-            <option [value]="s.value">{{ s.label }}</option>
-          }
-        </select>
+      <!-- Описание -->
+      <div class="form-group">
+        <label for="description" class="form-label">Описание</label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          placeholder="Подробно опишите суть задачи, шаги воспроизведения или ожидаемый результат..." 
+          rows="5" 
+          class="form-textarea"
+        ></textarea>
       </div>
 
+      <!-- Статус -->
+      <div class="form-group">
+        <label for="status" class="form-label">Статус</label>
+        <div class="select-wrapper">
+          <select id="status" formControlName="status" class="form-select">
+            <option value="" disabled>Выберите статус</option>
+            @for (s of statusOptions; track s.value) {
+              <option [value]="s.value">{{ s.label }}</option>
+            }
+          </select>
+          <span class="select-arrow">▼</span>
+        </div>
+      </div>
+
+      <!-- Кнопки -->
       <div class="form-actions">
-        <button type="submit" [disabled]="taskForm.invalid" class="btn btn-pink-submit">
-          {{ isCreateMode ? 'Создать задачу' : 'Обновить задачу' }}
+        <button 
+          type="submit" 
+          [disabled]="taskForm.invalid || taskForm.pristine" 
+          class="btn btn-primary"
+        >
+          {{ isCreateMode ? 'Создать задачу' : 'Сохранить изменения' }}
         </button>
-        <button type="button" (click)="onCancel()" class="btn btn-pink-cancel">
+        <button type="button" (click)="onCancel()" class="btn btn-secondary">
           Отмена
         </button>
       </div>

@@ -9,6 +9,7 @@ import ru.ssau.diploma.entity.Role;
 import ru.ssau.diploma.entity.User;
 import ru.ssau.diploma.entity.dto.RoleDto;
 import ru.ssau.diploma.entity.dto.UserDto;
+import ru.ssau.diploma.entity.dto.UserRoleDto;
 import ru.ssau.diploma.exception.RoleNotFoundException;
 import ru.ssau.diploma.exception.UserAlreadyRegisterException;
 import ru.ssau.diploma.repository.RoleRepository;
@@ -86,11 +87,11 @@ public class UserService implements UserDetailsService {
             userRepository.delete(loadUserByUsername(username));
     }
 
-    public void assignRole(UserDto userDto) throws UsernameNotFoundException, RoleNotFoundException{
+    public void assignRole(UserRoleDto userDto) throws UsernameNotFoundException, RoleNotFoundException{
         Optional<User> foundedUser = userRepository.findByUsername(userDto.getUsername());
         if(foundedUser.isEmpty()) throw new UsernameNotFoundException(userDto.getUsername());
-        Optional<Role> foundedRole = roleRepository.findByName(userDto.getRoles().get(0).getName());
-        if(foundedRole.isEmpty()) throw new RoleNotFoundException(userDto.getRoles().get(0).getName());
+        Optional<Role> foundedRole = roleRepository.findByName(userDto.getRole());
+        if(foundedRole.isEmpty()) throw new RoleNotFoundException(userDto.getRole());
         User user = foundedUser.get();
         List<Role> roles = user.getRoles();
         if(!roles.contains(foundedRole.get())) {
@@ -100,11 +101,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void withdrawRole(UserDto userDto) throws UsernameNotFoundException, RoleNotFoundException{
+    public void withdrawRole(UserRoleDto userDto) throws UsernameNotFoundException, RoleNotFoundException{
         Optional<User> foundedUser = userRepository.findByUsername(userDto.getUsername());
         if(foundedUser.isEmpty()) throw new UsernameNotFoundException(userDto.getUsername());
-        Optional<Role> foundedRole = roleRepository.findByName(userDto.getRoles().get(0).getName());
-        if(foundedRole.isEmpty()) throw new RoleNotFoundException(userDto.getRoles().get(0).getName());
+        Optional<Role> foundedRole = roleRepository.findByName("ROLE_MODERATOR");
+        if(foundedRole.isEmpty()) throw new RoleNotFoundException("ROLE_MODERATOR");
         User user = foundedUser.get();
         List<Role> roles = user.getRoles();
         roles.remove(foundedRole.get());

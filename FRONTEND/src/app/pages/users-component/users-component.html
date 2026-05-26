@@ -1,30 +1,79 @@
-<p>users-component works!</p>
+<h2 class="page-title red">
+  Управление пользователями
+</h2>
 
-<div>
-    <ul>
-    @for(user of users; track $index) {
-        <li>{{user.id}} ___ {{user.username}}
-            @if(editUsername === user.username){
-                <input [(ngModel)]="newPassword" type="text" placeholder="New password"/>
-                <button (click)="saveEdit()">✓</button>
-                <button (click)="cancelEdit()">✕</button>
+<div class="users-wrapper">
+  <ul class="users-list">
+    @for (user of users; track user.id) {
+      <li class="user-card">
+        
+
+        <div class="user-info">
+          <span class="user-id">#{{ user.id }}</span>
+          <span class="username">{{ user.username }}</span>
+          
+          @if (user.firstName || user.lastName) {
+            <span class="user-fullname">
+              {{ user.firstName }} {{ user.lastName }}
+            </span>
+          }
+          
+          <!-- Роли в виде бейджей -->
+          <div class="user-roles">
+            @for (role of user.roles; track role.name) {
+              <span class="role-badge" [class]="'role-' + (role.name?.toLowerCase() || '')">
+                {{ role.name | roleName }}
+              </span>
             }
-            @else {
-                <button (click)="startEdit(user.username)">Change password</button>
+          </div>
+        </div>
+
+        <div class="user-actions">
+          <!-- Смена пароля -->
+          @if (editUsername === user.username) {
+            <div class="password-edit">
+              <input 
+                type="password" 
+                [(ngModel)]="newPassword" 
+                placeholder="Новый пароль"
+                (keyup.enter)="saveEdit()"
+                (keyup.escape)="cancelEdit()"
+              />
+              <button type="button" class="btn-confirm" (click)="saveEdit()">✓</button>
+              <button type="button" class="btn-cancel" (click)="cancelEdit()">✕</button>
+            </div>
+          } @else {
+            <button type="button" class="btn-password" (click)="startEdit(user.username)">
+              🔑 Пароль
+            </button>
+          }
+
+          <!-- Удаление (нельзя удалить админа) -->
+          @if (!user.roles?.some(r => r.name === 'ROLE_ADMIN')) {
+            <button type="button" class="btn-delete" (click)="onDelete(user)">
+              🗑️ Удалить
+            </button>
+          }
+
+          <!-- Управление ролью модератора (только админ может менять) -->
+          @if (authService.hasRoles(['ROLE_ADMIN']) && user.username !== authService.getCurrentUser()?.username) {
+            @if (user.roles?.some(r => r.name === 'ROLE_MODERATOR')) {
+              <button type="button" class="btn-role-remove" (click)="onDeAssign(user.username, 'ROLE_MODERATOR')">
+                Снять модератора
+              </button>
+            } @else {
+              <button type="button" class="btn-role-add" (click)="onAssign(user.username, 'ROLE_MODERATOR')">
+                Назначить модератора
+              </button>
             }
-
-            @if(user.roles?.some(role => role.name !== 'ROLE_ADMIN')){
-                <button (click)="onDelete(user)">Delete</button>
-                @if(user.roles?.some(role => role.name === 'ROLE_MODERATOR')){
-                <button (click)="onDeAssign(user)">DeAssign moderator</button>
-                }             
-                @else {
-                    <button (click)="onAssign(user)">Assign moderator</button>
-                }
-            }     
-
-            
-        </li>
+          }
+        </div>
+      </li>
+    } @empty {
+      <li class="empty-user">
+        <span class="empty-icon">🔍</span>
+        <span>Пользователи не найдены</span>
+      </li>
     }
-</ul>
+  </ul>
 </div>

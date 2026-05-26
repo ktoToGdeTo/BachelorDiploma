@@ -10,9 +10,9 @@ http:
     type: json
     data: |-
       {
-        "title":"Task67",
-        "description":"My top description",
-        "status":"CLOSED"
+        "title":"My first task22",
+        "description":"The most interesting part of this task. Hihihaha",
+        "status":"IN_PROGRESS"
       }
   auth: inherit
 

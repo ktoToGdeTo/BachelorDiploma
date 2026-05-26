@@ -4,7 +4,7 @@ info:
   seq: 15
 
 http:
-  method: POST
+  method: DELETE
   url: "{{BASE_URL}}/admin/assign"
   body:
     type: json

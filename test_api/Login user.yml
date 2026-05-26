@@ -5,14 +5,20 @@ info:
 
 http:
   method: POST
-  url: "{{BASE_URL}}/auth/login"
+  url: "{{BASE_URL}}/login"
   body:
     type: form-urlencoded
     data:
       - name: username
-        value: ryanGosling111
+        value: mike1987
+        disabled: true
       - name: password
-        value: "67"
+        value: "123"
+        disabled: true
+      - name: username
+        value: admin
+      - name: password
+        value: admin
   auth: inherit
 
 settings:

@@ -5,7 +5,18 @@ info:
 
 http:
   method: POST
-  url: "{{BASE_URL}}/admin/assign/thebestcoder11/ROLE_MODERATOR"
+  url: "{{BASE_URL}}/admin/assign"
+  body:
+    type: json
+    data: |-
+      {
+        "username":"thebestcoder11",
+        "roles":[
+          {
+            "name":"ROLE_MODERATOR"
+          }
+        ]
+      }
   auth: inherit
 
 settings:

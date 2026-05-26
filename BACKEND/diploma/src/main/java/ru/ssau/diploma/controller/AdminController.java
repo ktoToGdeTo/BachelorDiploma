@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.ssau.diploma.entity.dto.UserDto;
+import ru.ssau.diploma.entity.dto.UserRoleDto;
 import ru.ssau.diploma.repository.UserRepository;
 import ru.ssau.diploma.service.UserService;
 
@@ -27,9 +28,9 @@ public class AdminController {
     }
 
     @PostMapping("/assign")
-    public ResponseEntity<Void> assignRole(@RequestBody UserDto userDto){
+    public ResponseEntity<Void> assignRole(@RequestBody UserRoleDto userRoleDto){
         try{
-            userService.assignRole(userDto);
+            userService.assignRole(userRoleDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
@@ -37,9 +38,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/assign")
-    public ResponseEntity<Void> withdrawRole(@RequestBody UserDto userDto){
+    public ResponseEntity<Void> withdrawRole(@RequestBody UserRoleDto userRoleDto){
         try{
-            userService.withdrawRole(userDto);
+            userService.withdrawRole(userRoleDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }

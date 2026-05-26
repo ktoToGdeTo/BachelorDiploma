@@ -1,0 +1,307 @@
+/* Заголовок в красной теме */
+.page-title.red {
+  border-bottom-color: #fca5a5;
+  color: #7f1d1d;
+}
+
+.page-title.red .title-icon {
+  color: #dc2626;
+}
+
+.users-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.users-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Карточка пользователя */
+.user-card {
+  position: relative;
+  background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  transition: all 0.25s ease;
+  animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.user-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
+  border-color: #f87171;
+}
+
+/* Бейджи админ/модератор */
+.user-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-badge.admin {
+  background: #dc2626;
+  color: white;
+}
+
+.user-badge.moderator {
+  background: #f59e0b;
+  color: white;
+}
+
+/* Информация о пользователе */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.user-id {
+  font-size: 11px;
+  color: #991b1b;
+  font-weight: 600;
+  background: #fee2e2;
+  padding: 2px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.user-fullname {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Бейджи ролей */
+.user-roles {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.role-role_user {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.role-role_moderator {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.role-role_admin {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* Панель действий */
+.user-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.user-actions button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* Кнопка пароля */
+.btn-password {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.btn-password:hover {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+/* Кнопка удаления */
+.btn-delete {
+  background: #dc2626;
+  color: white;
+  border: 1px solid #b91c1c;
+}
+
+.btn-delete:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* Кнопки назначения роли */
+.btn-role-add {
+  background: #f59e0b;
+  color: white;
+  border: 1px solid #d97706;
+}
+
+.btn-role-add:hover {
+  background: #d97706;
+}
+
+.btn-role-remove {
+  background: #64748b;
+  color: white;
+  border: 1px solid #475569;
+}
+
+.btn-role-remove:hover {
+  background: #475569;
+}
+
+/* Поле ввода пароля */
+.password-edit {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.password-edit input {
+  padding: 8px 12px;
+  border: 2px solid #fecaca;
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+  transition: border-color 0.2s;
+  min-width: 160px;
+}
+
+.password-edit input:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.password-edit input::placeholder {
+  color: #94a3b8;
+}
+
+.password-edit .btn-confirm {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.password-edit .btn-confirm:hover {
+  background: #059669;
+}
+
+.password-edit .btn-cancel {
+  background: #94a3b8;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.password-edit .btn-cancel:hover {
+  background: #64748b;
+}
+
+/* Пустой список */
+.empty-user {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-size: 14px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+}
+
+.empty-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .user-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+  
+  .user-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .user-actions button {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  .password-edit {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .password-edit input {
+    flex: 1;
+    min-width: 100%;
+  }
+}
