@@ -1,0 +1,30 @@
+<p>users-component works!</p>
+
+<div>
+    <ul>
+    @for(user of users; track $index) {
+        <li>{{user.id}} ___ {{user.username}}
+            @if(editUsername === user.username){
+                <input [(ngModel)]="newPassword" type="text" placeholder="New password"/>
+                <button (click)="saveEdit()">✓</button>
+                <button (click)="cancelEdit()">✕</button>
+            }
+            @else {
+                <button (click)="startEdit(user.username)">Change password</button>
+            }
+
+            @if(user.roles?.some(role => role.name !== 'ROLE_ADMIN')){
+                <button (click)="onDelete(user)">Delete</button>
+                @if(user.roles?.some(role => role.name === 'ROLE_MODERATOR')){
+                <button (click)="onDeAssign(user)">DeAssign moderator</button>
+                }             
+                @else {
+                    <button (click)="onAssign(user)">Assign moderator</button>
+                }
+            }     
+
+            
+        </li>
+    }
+</ul>
+</div>

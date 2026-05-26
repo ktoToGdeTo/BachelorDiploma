@@ -1,0 +1,20 @@
+<div class="bg_taskList">
+
+
+<div class="tasks-list-container">
+  @for (task of tasks; track task.id) {
+    <app-task-card-component 
+      [task]="task" 
+      (deleteTask)="deleteTask($event)" 
+      (changeTask)="updateTask($event)">
+    </app-task-card-component>
+  }
+  @empty {
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <p class="empty-text">Тасок пока нет :(</p>
+      <p class="empty-hint">Создайте первую задачу, чтобы начать работу!</p>
+    </div>
+  }
+</div>
+</div>

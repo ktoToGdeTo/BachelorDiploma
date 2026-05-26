@@ -1,0 +1,46 @@
+<aside class="pink-sidebar">
+  <!-- Шапка сайдбара -->
+  <div class="sidebar-header">
+    <a routerLink="/" class="sidebar-brand">
+      <span class="brand-text">Менеджер задач</span>
+    </a>
+  </div>
+
+  <!-- Навигация -->
+  <nav class="sidebar-nav">
+    @if (auth.isAuthenticated$ | async) {
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link pink-link" routerLink="/tasks" routerLinkActive="active-link">Задачи</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link pink-link" routerLink="/tasks/new" routerLinkActive="active-link">Создать задачу</a>
+        </li>
+        
+        @if (auth.hasRoles(['ROLE_ADMIN'])) {
+          <li class="nav-item">
+            <a class="nav-link pink-link" routerLink="/users/all" routerLinkActive="active-link">Все пользователи</a>
+          </li>
+        }
+      </ul>
+    }
+  </nav>
+
+  <!-- Футер сайдбара (профиль + выход) -->
+  <div class="sidebar-footer">
+    @if (auth.isAuthenticated$ | async) {
+      <div class="user-info">
+        <span class="username">{{ auth.getCurrentUser()?.username }}</span>
+        <!-- Форматируем роли для читаемости -->
+        <span class="roles">{{ displayRoles }}</span>
+      </div>
+      <button class="btn-pink btn-logout" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i> Выход
+      </button>
+    } @else {
+      <a routerLink="/login" class="btn-pink btn-login">
+        <i class="bi bi-box-arrow-in-right"></i> Вход
+      </a>
+    }
+  </div>
+</aside>

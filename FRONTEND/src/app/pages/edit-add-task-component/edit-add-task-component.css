@@ -1,0 +1,16 @@
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical; /* ✅ Только вертикальное растягивание */
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #e91e63;
+}

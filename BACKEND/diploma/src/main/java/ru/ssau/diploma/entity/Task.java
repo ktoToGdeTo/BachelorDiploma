@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -27,15 +29,13 @@ public class Task {
 
     @Column(name = "changed_time")
     private LocalDateTime changedTime;
-    
-    @Enumerated(EnumType.STRING)
+
     @ManyToOne
     @JoinColumn(name = "status")
     private TaskStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
-
-
 }

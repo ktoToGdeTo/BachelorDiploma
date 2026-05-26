@@ -1,0 +1,26 @@
+info:
+  name: Withdraw role (ADMIN ONLY)
+  type: http
+  seq: 15
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/admin/assign"
+  body:
+    type: json
+    data: |-
+      {
+        "username":"thebestcoder11",
+        "roles":[
+          {
+            "name":"ROLE_MODERATOR"
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

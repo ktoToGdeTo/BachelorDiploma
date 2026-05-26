@@ -1,0 +1,40 @@
+<div class="task-form-container">
+  <div class="task-card">
+    <h2 class="form-heading">
+      {{ isCreateMode ? 'Создание задачи' : 'Редактирование задачи' }}
+    </h2>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="taskForm" class="pink-form">
+      
+      <div class="form-field">
+        <label for="title">Название</label>
+        <input id="title" formControlName="title" type="text" placeholder="Введите название задачи" />
+      </div>
+
+      <div class="form-field">
+    <label for="description">Описание</label>
+    <textarea id="description" formControlName="description" placeholder="Введите подробное описание задачи..." rows="5"></textarea>
+  </div>
+
+      <div class="form-field">
+        <label for="status">Статус</label>
+        <select id="status" formControlName="status">
+          <option value="" disabled>Выберите статус</option>
+          @for (s of statusOptions; track $index) {
+            <option [value]="s.value">{{ s.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="taskForm.invalid" class="btn btn-pink-submit">
+          {{ isCreateMode ? 'Создать задачу' : 'Обновить задачу' }}
+        </button>
+        <button type="button" (click)="onCancel()" class="btn btn-pink-cancel">
+          Отмена
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

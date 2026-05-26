@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.ssau.diploma.entity.dto.UserDto;
 import ru.ssau.diploma.exception.UserAlreadyRegisterException;
@@ -35,5 +36,13 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "username") String username){
+        try {
+            userService.deleteUser(username);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: USER NOT FOUND");
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

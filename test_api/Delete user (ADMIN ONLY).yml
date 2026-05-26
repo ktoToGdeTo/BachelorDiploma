@@ -1,0 +1,15 @@
+info:
+  name: Delete user (ADMIN ONLY)
+  type: http
+  seq: 13
+
+http:
+  method: DELETE
+  url: "{{BASE_URL}}/users/delete/admin22"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

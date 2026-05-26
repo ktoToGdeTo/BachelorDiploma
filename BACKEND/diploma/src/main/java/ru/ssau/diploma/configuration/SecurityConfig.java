@@ -1,7 +1,7 @@
 package ru.ssau.diploma.configuration;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,12 +24,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@AllArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private UserService customUserDetailsService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -43,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userService);
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(customUserDetailsService);
         authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return authenticationProvider;
     }
@@ -67,19 +68,21 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/users/register", "/auth/logout").permitAll()
-                        .requestMatchers("/users/all", "/tasks/all").hasRole("ADMIN")
+                        .requestMatchers("/auth/status").authenticated()
+                        .requestMatchers("/login", "/users/register", "/logout").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/tasks/{id}", "/delete/{username}").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(login -> login
-                        .loginPage("/auth/login")
+                        .loginPage("/login")
                         .defaultSuccessUrl("/auth/me", true)
                         .permitAll())
                 .cors(cors -> cors
                         .configurationSource(apiConfigurationSource())
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
+                        .logoutUrl("/logout")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                         .logoutSuccessHandler((request, response, authentication) ->
@@ -89,9 +92,4 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
-
-
-
-
-
 }

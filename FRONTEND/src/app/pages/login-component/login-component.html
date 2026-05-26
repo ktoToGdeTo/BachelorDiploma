@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="auth-title">Вход в TaskCracker</h2>
+      <p class="auth-subtitle">Введите свои данные для продолжения</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+      <div class="form-field">
+        <label for="username">Имя пользователя</label>
+        <input id="username" formControlName="username" type="text" placeholder="username" autocomplete="username" />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Пароль</label>
+        <input id="password" formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid" class="btn btn-pink-submit">
+        Войти
+      </button>
+
+    </form>
+    <div>
+      <p>Нет аккаунта? <a href="/register">Зарегестрируйтесь!</a></p>
+    </div>
+  </div>
+</div>

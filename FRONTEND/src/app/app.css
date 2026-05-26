@@ -1,0 +1,12 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa; /* Фон основного контента */
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Должно совпадать с шириной сайдбара */
+  padding: 24px;
+  overflow-y: auto;
+}

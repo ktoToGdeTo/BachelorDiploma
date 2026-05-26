@@ -1,0 +1,15 @@
+info:
+  name: Assign role (ADMIN ONLY)
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/admin/assign/thebestcoder11/ROLE_MODERATOR"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

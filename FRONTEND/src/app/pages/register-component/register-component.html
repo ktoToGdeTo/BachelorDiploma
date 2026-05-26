@@ -1,0 +1,44 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="auth-title">Вход в TaskCracker</h2>
+      <p class="auth-subtitle">Введите свои данные для продолжения</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+      <div class="form-field">
+        <label for="username">Логин</label>
+        <input id="username" formControlName="username" type="text" placeholder="Логин" autocomplete="username" />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Пароль</label>
+        <input id="password" formControlName="password" type="password" placeholder="Пароль" autocomplete="current-password" />
+      </div>
+
+      <div class="form-field">
+        <label for="firstName">Имя</label>
+        <input id="firstName" formControlName="firstName" type="text" placeholder="Имя" autocomplete="firstName" />
+      </div>
+
+      <div class="form-field">
+        <label for="lastName">Фамилия</label>
+        <input id="lastName" formControlName="lastName" type="text" placeholder="Фамилия" autocomplete="lastName" />
+      </div>
+
+      <div class="form-field">
+        <label for="birthDate">Дата рождения</label>
+        <input id="birthDate" formControlName="birthDate" type="date" value="1999-01-01" />
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid" class="btn btn-pink-submit">
+        Зарегистрироваться
+      </button>
+
+    </form>
+    <div>
+      <p>Есть аккаунт? <a href="/login">Войдите!</a></p>
+    </div>
+  </div>
+</div>

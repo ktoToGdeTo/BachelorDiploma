@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import ru.ssau.diploma.entity.Task;
 import ru.ssau.diploma.entity.User;
 import ru.ssau.diploma.entity.dto.TaskDto;
+import ru.ssau.diploma.exception.TaskNotFoundException;
 import ru.ssau.diploma.repository.TaskRepository;
 import ru.ssau.diploma.repository.TaskStatusRepository;
 import ru.ssau.diploma.repository.UserRepository;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +31,8 @@ public class TaskService {
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
         taskDto.setCreated_time(task.getCreatedTime());
-        taskDto.setChanged_time(task.getChangedTime());
-        taskDto.setCreated_at(task.getUser().getId());
+        taskDto.setModified_time(task.getChangedTime());
+        taskDto.setCreated_by(task.getUser().getUsername());
         taskDto.setStatus(task.getStatus().getStatusName());
         return taskDto;
     }
@@ -43,7 +45,7 @@ public class TaskService {
 
     public TaskDto createTask(TaskDto taskDto, Authentication authentication) throws UserPrincipalNotFoundException{
         Optional<User> user = userRepository.findByUsername(authentication.getName());
-        if(user.isEmpty()) throw new UserPrincipalNotFoundException(Long.toString(taskDto.getCreated_at()));
+        if(user.isEmpty()) throw new UserPrincipalNotFoundException(authentication.getName());
         User foundedUser = user.get();
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
@@ -66,4 +68,20 @@ public class TaskService {
         return tasks.stream().map(this::taskToDto).toList();
     }
 
+    public void deleteTask(long id) {
+        Optional<Task> foundTask = taskRepository.findById(id);
+        if(foundTask.isEmpty()) throw new TaskNotFoundException();
+        taskRepository.deleteById(id);
+    }
+
+    public void updateTask(TaskDto taskDto) throws TaskNotFoundException {
+        Optional<Task> foundTask = taskRepository.findById(taskDto.getId());
+        if(foundTask.isEmpty()) throw new TaskNotFoundException();
+        Task task = foundTask.get();
+        task.setTitle(taskDto.getTitle());
+        task.setChangedTime(LocalDateTime.now());
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(taskStatusRepository.findByStatusName(taskDto.getStatus()));
+        taskRepository.save(task);
+    }
 }

@@ -12,7 +12,7 @@ public class TaskDto {
     private String title;
     private String description;
     private LocalDateTime created_time;
-    private LocalDateTime changed_time;
+    private LocalDateTime modified_time;
     private String status;
-    private long created_at;
+    private String created_by;
 }
