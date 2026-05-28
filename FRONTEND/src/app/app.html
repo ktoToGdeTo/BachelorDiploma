@@ -41,7 +41,14 @@
 </nav> -->
 @if (auth.isAuthenticated$ | async) {
 <div class="app-layout">
-  <app-sidebar-component></app-sidebar-component>
+  <app-sidebar-wrapper 
+    [isAuthenticated]="true"
+    [user]="auth.getCurrentUser()"
+    [tasks]="[]"
+    (logout)="auth.logout()"
+    (navigate)="onNavigate($event)"
+    (taskSelect)="onTaskSelect($event)">
+  </app-sidebar-wrapper>
   <main class="main-content">
     <router-outlet />
   </main>
