@@ -121,3 +121,98 @@
 .sidebar-tasks button:hover {
   background-color: #34495e;
 }
+
+/* Стили для профиля пользователя */
+.sidebar-user-profile {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #34495e;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+  overflow: hidden;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.role-badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.2);
+  text-transform: capitalize;
+}
+
+.role-badge.admin {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.role-badge.user {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Стили для кнопок задач */
+.sidebar-tasks li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-button {
+  flex: 1;
+  text-align: left !important;
+}
+
+.delete-task-btn {
+  width: auto !important;
+  padding: 4px 8px !important;
+  margin-left: 8px;
+  background-color: #e74c3c !important;
+  border: none !important;
+  font-size: 1rem !important;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.delete-task-btn:hover {
+  background-color: #c0392b !important;
+}
+
+/* Скрытие кнопки Users для не-админов */
+.admin-only {
+  display: none;
+}

@@ -2,6 +2,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  roles?: string[];
+  role?: string;
 }
 
 export interface Task {
@@ -17,4 +19,5 @@ export interface SidebarProps {
   onLogout: () => void;
   onNavigate: (path: string) => void;
   onTaskSelect: (taskId: number) => void;
+  onDeleteTask?: (taskId: number) => void;
 }
