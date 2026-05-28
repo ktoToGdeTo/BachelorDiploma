@@ -9,13 +9,38 @@ const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   onNavigate,
   onTaskSelect,
+  onDeleteTask,
 }) => {
+  // Проверка прав администратора
+  const isAdmin = user?.roles?.includes('admin') || user?.role === 'admin';
+
   return (
     <div className="sidebar">
       <div className="sidebar-header">
         <h2>Task Manager</h2>
       </div>
       
+      {/* Блок профиля пользователя с именем и ролями */}
+      {isAuthenticated && user && (
+        <div className="sidebar-user-profile">
+          <div className="user-avatar">
+            {user.name?.charAt(0).toUpperCase() || 'U'}
+          </div>
+          <div className="user-details">
+            <p className="user-name">{user.name}</p>
+            {user.roles && user.roles.length > 0 && (
+              <div className="user-roles">
+                {user.roles.map((role: string) => (
+                  <span key={role} className={`role-badge ${role}`}>
+                    {role}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <nav className="sidebar-nav">
         <ul>
           <li>
@@ -23,17 +48,19 @@ const Sidebar: React.FC<SidebarProps> = ({
               📋 Tasks
             </button>
           </li>
-          <li>
-            <button onClick={() => onNavigate('/users')}>
-              👥 Users
-            </button>
-          </li>
+          {/* Кнопка Users видна только админам */}
+          {isAdmin && (
+            <li>
+              <button onClick={() => onNavigate('/users')}>
+                👥 Users
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
 
       {isAuthenticated && user && (
         <div className="sidebar-user">
-          <p>Welcome, {user.name}</p>
           <button onClick={onLogout} className="logout-btn">
             Logout
           </button>
@@ -57,9 +84,25 @@ const Sidebar: React.FC<SidebarProps> = ({
           <ul>
             {tasks.slice(0, 5).map((task) => (
               <li key={task.id}>
-                <button onClick={() => onTaskSelect(task.id)}>
+                <button 
+                  className="task-button"
+                  onClick={() => onTaskSelect(task.id)}
+                >
                   {task.title}
                 </button>
+                {/* Кнопка удаления видна только админам */}
+                {isAdmin && onDeleteTask && (
+                  <button
+                    className="delete-task-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteTask(task.id);
+                    }}
+                    title="Delete task"
+                  >
+                    ×
+                  </button>
+                )}
               </li>
             ))}
           </ul>

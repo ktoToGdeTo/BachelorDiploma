@@ -2,29 +2,37 @@
 # Dependencies
 node_modules/
 
-# Build outputs
-dist/
-build/
-*.js.map
-*.tsbuildinfo
-
-# Logs and temp files
-*.log
-*.tmp
-
 # Environment
 .env
 .env.local
 *.env.*
 
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
 # Editors
 .vscode/
 .idea/
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+.env
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# TypeScript
-*.tsbuildinfo
 ```

@@ -1,6 +1,6 @@
 const path = require('path');
-const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -43,11 +43,11 @@ module.exports = {
       shared: {
         react: {
           singleton: true,
-          requiredVersion: '^18.2.0',
+          requiredVersion: '^18.3.1',
         },
         'react-dom': {
           singleton: true,
-          requiredVersion: '^18.2.0',
+          requiredVersion: '^18.3.1',
         },
       },
     }),

@@ -62,7 +62,8 @@ export class SidebarWrapperComponent implements OnInit, OnDestroy {
 
       // Получение компонента Sidebar
       const factory = await window.sidebar_app.get('./Sidebar');
-      this.SidebarComponent = factory();
+      const module = factory();
+      this.SidebarComponent = module.default || module;
     } catch (error) {
       console.error('Failed to load sidebar microfrontend:', error);
     }
