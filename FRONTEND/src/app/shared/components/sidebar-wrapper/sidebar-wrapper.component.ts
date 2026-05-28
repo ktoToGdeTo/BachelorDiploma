@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { User } from '../../core/entity/user';
-import { Task } from '../../core/entity/task';
+import { User } from '../../../core/entity/user';
+import { Task } from '../../../core/entity/task';
 
 declare global {
   interface Window {
@@ -62,7 +62,8 @@ export class SidebarWrapperComponent implements OnInit, OnDestroy {
 
       // Получение компонента Sidebar
       const factory = await window.sidebar_app.get('./Sidebar');
-      this.SidebarComponent = factory();
+      const module = factory();
+      this.SidebarComponent = module.default || module;
     } catch (error) {
       console.error('Failed to load sidebar microfrontend:', error);
     }
@@ -77,7 +78,7 @@ export class SidebarWrapperComponent implements OnInit, OnDestroy {
     // Создание React-компонента с пропсами
     const props = {
       isAuthenticated: this.isAuthenticated,
-      user: this.user ? { id: this.user.id, name: this.user.name, email: this.user.email } : null,
+      user: this.user ? { id: this.user.id, username: this.user.username} : null,
       tasks: this.tasks.map(t => ({ id: t.id, title: t.title, status: t.status })),
       onLogout: () => this.logout.emit(),
       onNavigate: (path: string) => this.navigate.emit(path),

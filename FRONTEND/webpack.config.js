@@ -1,4 +1,4 @@
-const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 
 module.exports = {
   plugins: [

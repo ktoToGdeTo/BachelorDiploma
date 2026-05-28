@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </li>
           <li>
-            <button onClick={() => onNavigate('/users')}>
+            <button onClick={() => onNavigate('/users/all')}>
               👥 Users
             </button>
           </li>
@@ -36,17 +36,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           <p>Welcome, {user.name}</p>
           <button onClick={onLogout} className="logout-btn">
             Logout
-          </button>
-        </div>
-      )}
-
-      {!isAuthenticated && (
-        <div className="sidebar-auth">
-          <button onClick={() => onNavigate('/login')}>
-            Login
-          </button>
-          <button onClick={() => onNavigate('/register')}>
-            Register
           </button>
         </div>
       )}
