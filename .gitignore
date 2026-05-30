@@ -1,0 +1,6 @@
+# Diagram files
+*.puml
+*.plantuml
+*.pu
+*.dot
+*.gv
