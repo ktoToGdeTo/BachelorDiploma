@@ -1,0 +1,4 @@
+@startuml aaa
+!include src\main\java\ru\ssau\diploma\configuration\PasswordEncoderConfig.java
+
+@enduml
