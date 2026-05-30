@@ -22,11 +22,11 @@
 
   <div class="task-actions">
     <button class="btn-task btn-edit" (click)="onChange()">
-      ✏️ Редактировать
+      Редактировать
     </button>
     
     <button *ngIf="this.authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])" class="btn-task btn-delete" (click)="onDelete()">
-      🗑️ Удалить
+      Удалить
     </button>
   </div>
 </div>

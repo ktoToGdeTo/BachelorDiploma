@@ -9,7 +9,7 @@
         
 
         <div class="user-info">
-          <span class="user-id">#{{ user.id }}</span>
+          <span class="user-id">ID пользователя в БД: {{ user.id }}</span>
           <span class="username">{{ user.username }}</span>
           
           @if (user.firstName || user.lastName) {
@@ -44,14 +44,14 @@
             </div>
           } @else {
             <button type="button" class="btn-password" (click)="startEdit(user.username)">
-              🔑 Пароль
+              Изменить пароль
             </button>
           }
 
           <!-- Удаление (нельзя удалить админа) -->
           @if (!user.roles?.some(r => r.name === 'ROLE_ADMIN')) {
             <button type="button" class="btn-delete" (click)="onDelete(user)">
-              🗑️ Удалить
+              Удалить пользователя
             </button>
           }
 

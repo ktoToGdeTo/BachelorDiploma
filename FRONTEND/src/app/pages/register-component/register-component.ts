@@ -16,18 +16,17 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      birthDate: ['', Validators.required]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      firstName: ['', [Validators.required, Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]],
+      lastName: ['', [Validators.required, Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]],
+      birthDate: ['', [Validators.required]]
     });
   }
 
   onSubmit(): void{
      if (this.registerForm.valid) {
       const { username, password, firstName, lastName, birthDate } = this.registerForm.value;
-      console.log(this.registerForm.value);
       this.auth.register(username!, password!, firstName!, lastName!, birthDate!).subscribe({
         next: (response) => {
           console.log("SUCCESSFUL REGA");

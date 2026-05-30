@@ -25,7 +25,7 @@ public class UserController {
             userService.registerUser(userDto);
         }
         catch (UserAlreadyRegisterException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("USER ALREADY REGISTER WITH THIS USERNAME");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Пользователь с таким логином уже существует. Попробуйте еще раз.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

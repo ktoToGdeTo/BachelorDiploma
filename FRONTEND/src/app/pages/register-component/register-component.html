@@ -10,27 +10,27 @@
       <div class="form-row">
         <div class="form-group">
           <label for="firstName" class="form-label">Имя</label>
-          <input id="firstName" formControlName="firstName" type="text" placeholder="Иван" autocomplete="given-name" class="form-input" />
+          <input id="firstName" formControlName="firstName" type="text" required placeholder="Иван" autocomplete="given-name" class="form-input" />
         </div>
         <div class="form-group">
           <label for="lastName" class="form-label">Фамилия</label>
-          <input id="lastName" formControlName="lastName" type="text" placeholder="Иванов" autocomplete="family-name" class="form-input" />
+          <input id="lastName" formControlName="lastName" type="text" required placeholder="Иванов" autocomplete="family-name" class="form-input"/>
         </div>
       </div>
 
       <div class="form-group">
         <label for="username" class="form-label">Логин</label>
-        <input id="username" formControlName="username" type="text" placeholder="Придумайте логин" autocomplete="username" class="form-input" />
+        <input id="username" formControlName="username" type="text" required placeholder="Придумайте логин" autocomplete="username" class="form-input" />
       </div>
 
       <div class="form-group">
         <label for="password" class="form-label">Пароль</label>
-        <input id="password" formControlName="password" type="password" placeholder="Минимум 6 символов" autocomplete="new-password" class="form-input" />
+        <input id="password" formControlName="password" type="password" required placeholder="Минимум 6 символов" autocomplete="new-password" class="form-input" />
       </div>
 
       <div class="form-group">
         <label for="birthDate" class="form-label">Дата рождения</label>
-        <input id="birthDate" formControlName="birthDate" type="date" class="form-input" />
+        <input id="birthDate" formControlName="birthDate" type="date" required class="form-input" />
       </div>
 
       <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary btn-full">

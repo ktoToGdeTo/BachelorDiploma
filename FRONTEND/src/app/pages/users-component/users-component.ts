@@ -24,7 +24,6 @@ export class UsersComponent implements OnInit{
       next: (data) => {
         this.users = data;
         this.cd.markForCheck();
-        console.log(this.users);
       },
       error: (err) => {
         console.error('Ошибка при получении пользователей', err);

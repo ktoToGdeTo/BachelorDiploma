@@ -15,19 +15,19 @@
         <ul class="nav-list">
           <li class="nav-item">
             <a class="nav-link" routerLink="/tasks" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
-              <span class="link-icon">📋</span> Задачи
+              Задачи
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/tasks/new" routerLinkActive="active-link">
-              <span class="link-icon">➕</span> Создать задачу
+              Создать задачу
             </a>
           </li>
           
           @if (authService.hasRoles(['ROLE_ADMIN'])) {
             <li class="nav-item">
               <a class="nav-link" routerLink="/users/all" routerLinkActive="active-link">
-                <span class="link-icon">👥</span> Все пользователи
+                Все пользователи
               </a>
             </li>
           }
@@ -59,11 +59,11 @@
         <div class="user-roles">{{ displayRoles }}</div>
       </div>
       <button class="btn-sidebar btn-logout" (click)="logout()">
-        <span class="btn-icon">🚪</span> Выйти
+        Выйти
       </button>
     } @else {
       <a routerLink="/login" class="btn-sidebar btn-login">
-        <span class="btn-icon">🔑</span> Войти
+        Войти
       </a>
     }
   </div>

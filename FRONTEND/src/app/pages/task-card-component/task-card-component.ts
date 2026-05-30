@@ -1,8 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { TaskService } from '../../core/services/task-service';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Task } from '../../core/entity/task';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 
 @Component({

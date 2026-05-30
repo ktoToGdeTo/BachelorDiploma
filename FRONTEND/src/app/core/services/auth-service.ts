@@ -19,6 +19,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+get isAuthenticated(): boolean {
+  return this.isAuthenticatedSubject.value;
+}
+
   constructor() {
     // При перезагрузке страницы проверяем сессию на бэкенде
     this.checkSession();
