@@ -19,12 +19,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-get isAuthenticated(): boolean {
-  return this.isAuthenticatedSubject.value;
-}
-
+  get isAuthenticated(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
   constructor() {
-    // При перезагрузке страницы проверяем сессию на бэкенде
     this.checkSession();
   }
 
@@ -51,10 +49,10 @@ get isAuthenticated(): boolean {
 
     return this.http.post(`${this.url}/login`, body.toString(), {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
-      withCredentials: true 
+      withCredentials: true
     }).pipe(
       tap(() => {
-         this.http.get<User>(`${this.url}/auth/me`, { withCredentials: true }).subscribe(user => {
+        this.http.get<User>(`${this.url}/auth/me`, { withCredentials: true }).subscribe(user => {
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         });
@@ -78,12 +76,12 @@ get isAuthenticated(): boolean {
     return this.currentUserSubject.value;
   }
 
-  register(username: string, password: string, firstName: string, lastName: string, birthDate: Date): Observable<any>{
-    const body = {username, password, firstName, lastName, birthDate};
+  register(username: string, password: string, firstName: string, lastName: string, birthDate: Date): Observable<any> {
+    const body = { username, password, firstName, lastName, birthDate };
 
     return this.http.post(`${this.url}/users/register`, body, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      withCredentials: true 
+      withCredentials: true
     }).pipe(
       tap(() => {
         this.router.navigate(['/login']);
@@ -98,19 +96,19 @@ get isAuthenticated(): boolean {
   }
 
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.url+"/users/all");
-  }
-  
-  deleteUser(username: string){
-    return this.http.delete(this.url+"/users/delete/"+username);
+    return this.http.get<User[]>(this.url + "/users/all");
   }
 
-  changePassword(username: string, password: string){
-    const body = {username, password};
+  deleteUser(username: string) {
+    return this.http.delete(this.url + "/users/delete/" + username);
+  }
+
+  changePassword(username: string, password: string) {
+    const body = { username, password };
 
     return this.http.put(`${this.url}/admin/reset`, body, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      withCredentials: true 
+      withCredentials: true
     }).pipe(
       catchError((error) => {
         if (error.status === 401) {
@@ -121,17 +119,21 @@ get isAuthenticated(): boolean {
     );
   }
 
-  public hasRoles(roles: string[]): boolean {
-    const userRole = sessionStorage.getItem('roles');
-    return userRole ? roles.includes(userRole) : false;
+  public hasRoles(requiredRoles: string[]): boolean {
+    const rolesString = sessionStorage.getItem('roles');
+
+    if (!rolesString) return false;
+    const userRoles = rolesString.split(',').map(r => r.trim());
+
+    return requiredRoles.some(role => userRoles.includes(role));
   }
 
-  public assignRole(username: string, role: string): Observable<any>{
-    const body = {username, role}
+  public assignRole(username: string, role: string): Observable<any> {
+    const body = { username, role }
 
     return this.http.post(`${this.url}/admin/assign`, body, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      withCredentials: true 
+      withCredentials: true
     }).pipe(
       catchError((error) => {
         if (error.status === 401) {
@@ -142,9 +144,20 @@ get isAuthenticated(): boolean {
     );
   }
 
-  public deAssignRole(username: string, role: string): Observable<any>{
-    const body = {username, role}
-    return this.http.delete(`${this.url}/admin/assign`+username);
+  public deAssignRole(username: string, role: string): Observable<any> {
+    const body = { username, role }
+
+    return this.http.post(`${this.url}/admin/assign/delete`, body, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      withCredentials: true
+    }).pipe(
+      catchError((error) => {
+        if (error.status === 401) {
+          alert('Неизвестная ошибка');
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
 }

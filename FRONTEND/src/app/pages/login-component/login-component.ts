@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './login-component.css',
 })
 export class LoginComponent implements OnInit {
-   loginForm: FormGroup;
+  loginForm: FormGroup;
   auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -23,10 +23,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Читаем returnUrl из query-параметров
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/tasks';
-    
-    // Если уже авторизован — сразу редиректим
+
     if (this.auth.isAuthenticated) {
       this.router.navigateByUrl(this.returnUrl);
     }
@@ -47,7 +45,6 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginSuccess() {
-    // Читаем returnUrl из query-параметров или ставим дефолтный
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
     this.router.navigateByUrl(returnUrl);
   }

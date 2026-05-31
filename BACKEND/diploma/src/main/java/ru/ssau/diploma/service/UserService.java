@@ -104,8 +104,8 @@ public class UserService implements UserDetailsService {
     public void withdrawRole(UserRoleDto userDto) throws UsernameNotFoundException, RoleNotFoundException{
         Optional<User> foundedUser = userRepository.findByUsername(userDto.getUsername());
         if(foundedUser.isEmpty()) throw new UsernameNotFoundException(userDto.getUsername());
-        Optional<Role> foundedRole = roleRepository.findByName("ROLE_MODERATOR");
-        if(foundedRole.isEmpty()) throw new RoleNotFoundException("ROLE_MODERATOR");
+        Optional<Role> foundedRole = roleRepository.findByName(userDto.getRole());
+        if(foundedRole.isEmpty()) throw new RoleNotFoundException(userDto.getRole());
         User user = foundedUser.get();
         List<Role> roles = user.getRoles();
         roles.remove(foundedRole.get());

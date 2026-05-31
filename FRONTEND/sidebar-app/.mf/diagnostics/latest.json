@@ -1,0 +1,10 @@
+{
+  "latestErrorEvent": {
+    "code": "TYPE-001",
+    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"npx tsc --project C:\\\\Users\\\\micha\\\\Desktop\\\\meh_diplom\\\\FRONTEND\\\\sidebar-app\\\\node_modules\\\\.federation\\\\tsconfig.cad821b6aeefce5b44d89b099800ef90.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
+    "args": {
+      "cmd": "npx tsc --project C:\\Users\\micha\\Desktop\\meh_diplom\\FRONTEND\\sidebar-app\\node_modules\\.federation\\tsconfig.cad821b6aeefce5b44d89b099800ef90.json"
+    },
+    "timestamp": 1780234017763
+  }
+}

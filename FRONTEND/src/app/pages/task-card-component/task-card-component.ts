@@ -9,7 +9,7 @@ import { AuthService } from '../../core/services/auth-service';
   templateUrl: './task-card-component.html',
   styleUrl: './task-card-component.css',
 })
-export class TaskCardComponent {  
+export class TaskCardComponent {
   @Input({ required: true }) task!: Task;
   @Output() deleteTask = new EventEmitter<number>();
   @Output() changeTask = new EventEmitter<number>();

@@ -8,26 +8,14 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <div class="form-group">
         <label for="username" class="form-label">Логин</label>
-        <input
-          id="username"
-          formControlName="username"
-          type="text"
-          placeholder="Введите логин"
-          autocomplete="username"
-          class="form-input"
-        />
+        <input id="username" formControlName="username" type="text" placeholder="Введите логин" autocomplete="username"
+          class="form-input" />
       </div>
 
       <div class="form-group">
         <label for="password" class="form-label">Пароль</label>
-        <input
-          id="password"
-          formControlName="password"
-          type="password"
-          placeholder="Введите пароль"
-          autocomplete="current-password"
-          class="form-input"
-        />
+        <input id="password" formControlName="password" type="password" placeholder="Введите пароль"
+          autocomplete="current-password" class="form-input" />
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary btn-full">

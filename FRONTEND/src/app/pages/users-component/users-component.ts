@@ -10,7 +10,7 @@ import { RoleNamePipe } from '../../core/pipes/role-name-pipe';
   templateUrl: './users-component.html',
   styleUrl: './users-component.css',
 })
-export class UsersComponent implements OnInit{
+export class UsersComponent implements OnInit {
   authService = inject(AuthService);
   private cd = inject(ChangeDetectorRef);
 
@@ -31,7 +31,7 @@ export class UsersComponent implements OnInit{
     });
   }
 
-  onDelete(user: User){
+  onDelete(user: User) {
     if (!confirm(`Удалить ${user.username}?`)) return;
 
     this.authService.deleteUser(user.username).subscribe({
@@ -45,17 +45,17 @@ export class UsersComponent implements OnInit{
     });
   }
 
-  startEdit(username: string){
+  startEdit(username: string) {
     this.editUsername = username;
     this.newPassword = '';
   }
 
-  cancelEdit(){
-    this.editUsername =  null;
+  cancelEdit() {
+    this.editUsername = null;
     this.newPassword = '';
   }
 
-  saveEdit(){
+  saveEdit() {
     if (!this.editUsername || !this.newPassword.trim()) return;
 
     this.authService.changePassword(this.editUsername, this.newPassword).subscribe({
@@ -68,19 +68,19 @@ export class UsersComponent implements OnInit{
     });
   }
 
-  onAssign(username: string, role: string){
-  this.authService.assignRole(username, role).subscribe({
+  onAssign(username: string, role: string) {
+    this.authService.assignRole(username, role).subscribe({
       next: () => {
         alert("Модератор успешно добавлен");
         this.cd.markForCheck();
       },
       error: (err) => console.error('Ошибка смены модератора', err)
     });
-  
+
   }
 
-  onDeAssign(username: string, role: string){
-  this.authService.deAssignRole(username, role).subscribe({
+  onDeAssign(username: string, role: string) {
+    this.authService.deAssignRole(username, role).subscribe({
       next: () => {
         alert("Модератор успешно удален");
         this.cd.markForCheck();

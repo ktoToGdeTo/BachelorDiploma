@@ -3,10 +3,10 @@
     <h3 class="task-title">{{ task.title }}</h3>
     <span class="status-badge" [class]="'status-' + task.status.toLowerCase()">
       @switch(task.status) {
-        @case ("OPEN") { Открыто }
-        @case ("CLOSED") { Закрыто }
-        @case ("IN_PROGRESS") { В процессе }
-        @case ("DONE") { Завершено }
+      @case ("OPEN") { Открыто }
+      @case ("CLOSED") { Закрыто }
+      @case ("IN_PROGRESS") { В процессе }
+      @case ("DONE") { Завершено }
       }
     </span>
   </div>
@@ -24,8 +24,9 @@
     <button class="btn-task btn-edit" (click)="onChange()">
       Редактировать
     </button>
-    
-    <button *ngIf="this.authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])" class="btn-task btn-delete" (click)="onDelete()">
+
+    <button *ngIf="this.authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])" class="btn-task btn-delete"
+      (click)="onDelete()">
       Удалить
     </button>
   </div>
