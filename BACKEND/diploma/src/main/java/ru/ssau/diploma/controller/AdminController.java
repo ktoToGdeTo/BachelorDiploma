@@ -37,7 +37,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/assign")
+    @PostMapping("/assign/delete")
     public ResponseEntity<Void> withdrawRole(@RequestBody UserRoleDto userRoleDto){
         try{
             userService.withdrawRole(userRoleDto);

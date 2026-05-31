@@ -5,75 +5,66 @@
 <div class="users-wrapper">
   <ul class="users-list">
     @for (user of users; track user.id) {
-      <li class="user-card">
-        
+    <li class="user-card">
 
-        <div class="user-info">
-          <span class="user-id">ID пользователя в БД: {{ user.id }}</span>
-          <span class="username">{{ user.username }}</span>
-          
-          @if (user.firstName || user.lastName) {
-            <span class="user-fullname">
-              {{ user.firstName }} {{ user.lastName }}
-            </span>
-          }
-          
-          <!-- Роли в виде бейджей -->
-          <div class="user-roles">
-            @for (role of user.roles; track role.name) {
-              <span class="role-badge" [class]="'role-' + (role.name?.toLowerCase() || '')">
-                {{ role.name | roleName }}
-              </span>
-            }
-          </div>
-        </div>
 
-        <div class="user-actions">
-          <!-- Смена пароля -->
-          @if (editUsername === user.username) {
-            <div class="password-edit">
-              <input 
-                type="password" 
-                [(ngModel)]="newPassword" 
-                placeholder="Новый пароль"
-                (keyup.enter)="saveEdit()"
-                (keyup.escape)="cancelEdit()"
-              />
-              <button type="button" class="btn-confirm" (click)="saveEdit()">✓</button>
-              <button type="button" class="btn-cancel" (click)="cancelEdit()">✕</button>
-            </div>
-          } @else {
-            <button type="button" class="btn-password" (click)="startEdit(user.username)">
-              Изменить пароль
-            </button>
-          }
+      <div class="user-info">
+        <span class="user-id">ID пользователя в БД: {{ user.id }}</span>
+        <span class="username">{{ user.username }}</span>
 
-          <!-- Удаление (нельзя удалить админа) -->
-          @if (!user.roles?.some(r => r.name === 'ROLE_ADMIN')) {
-            <button type="button" class="btn-delete" (click)="onDelete(user)">
-              Удалить пользователя
-            </button>
-          }
+        @if (user.firstName || user.lastName) {
+        <span class="user-fullname">
+          {{ user.firstName }} {{ user.lastName }}
+        </span>
+        }
 
-          <!-- Управление ролью модератора (только админ может менять) -->
-          @if (authService.hasRoles(['ROLE_ADMIN']) && user.username !== authService.getCurrentUser()?.username) {
-            @if (user.roles?.some(r => r.name === 'ROLE_MODERATOR')) {
-              <button type="button" class="btn-role-remove" (click)="onDeAssign(user.username, 'ROLE_MODERATOR')">
-                Снять модератора
-              </button>
-            } @else {
-              <button type="button" class="btn-role-add" (click)="onAssign(user.username, 'ROLE_MODERATOR')">
-                Назначить модератора
-              </button>
-            }
+        <div class="user-roles">
+          @for (role of user.roles; track role.name) {
+          <span class="role-badge" [class]="'role-' + (role.name?.toLowerCase() || '')">
+            {{ role.name | roleName }}
+          </span>
           }
         </div>
-      </li>
+      </div>
+
+      <div class="user-actions">
+        @if (editUsername === user.username) {
+        <div class="password-edit">
+          <input type="password" [(ngModel)]="newPassword" placeholder="Новый пароль" (keyup.enter)="saveEdit()"
+            (keyup.escape)="cancelEdit()" />
+          <button type="button" class="btn-confirm" (click)="saveEdit()">✓</button>
+          <button type="button" class="btn-cancel" (click)="cancelEdit()">✕</button>
+        </div>
+        } @else {
+        <button type="button" class="btn-password" (click)="startEdit(user.username)">
+          Изменить пароль
+        </button>
+        }
+
+        @if (!user.roles?.some(r => r.name === 'ROLE_ADMIN')) {
+        <button type="button" class="btn-delete" (click)="onDelete(user)">
+          Удалить пользователя
+        </button>
+        }
+
+        @if (authService.hasRoles(['ROLE_ADMIN']) && user.username !== authService.getCurrentUser()?.username) {
+        @if (user.roles?.some(r => r.name === 'ROLE_MODERATOR')) {
+        <button type="button" class="btn-role-remove" (click)="onDeAssign(user.username, 'ROLE_MODERATOR')">
+          Снять модератора
+        </button>
+        } @else {
+        <button type="button" class="btn-role-add" (click)="onAssign(user.username, 'ROLE_MODERATOR')">
+          Назначить модератора
+        </button>
+        }
+        }
+      </div>
+    </li>
     } @empty {
-      <li class="empty-user">
-        <span class="empty-icon">🔍</span>
-        <span>Пользователи не найдены</span>
-      </li>
+    <li class="empty-user">
+      <span class="empty-icon">🔍</span>
+      <span>Пользователи не найдены</span>
+    </li>
     }
   </ul>
 </div>

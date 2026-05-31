@@ -24,8 +24,8 @@ export class RegisterComponent {
     });
   }
 
-  onSubmit(): void{
-     if (this.registerForm.valid) {
+  onSubmit(): void {
+    if (this.registerForm.valid) {
       const { username, password, firstName, lastName, birthDate } = this.registerForm.value;
       this.auth.register(username!, password!, firstName!, lastName!, birthDate!).subscribe({
         next: (response) => {
@@ -36,6 +36,4 @@ export class RegisterComponent {
       });
     }
   }
-
-
 }

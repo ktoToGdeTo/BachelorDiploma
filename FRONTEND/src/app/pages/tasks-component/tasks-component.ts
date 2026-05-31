@@ -25,11 +25,10 @@ export class TasksComponent implements OnInit {
     this.loadTasks();
   }
 
-  // 🔹 Объединяем логику загрузки, чтобы не дублировать код
   private loadTasks(): void {
     const isAdminOrMod = this.authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR']);
-    const request$ = isAdminOrMod 
-      ? this.taskService.getAllTasks() 
+    const request$ = isAdminOrMod
+      ? this.taskService.getAllTasks()
       : this.taskService.getTasks();
 
     request$.subscribe({
@@ -44,17 +43,13 @@ export class TasksComponent implements OnInit {
 
     this.taskService.deleteTask(id).subscribe({
       next: () => {
-        // ✅ Локально обновляем массив для мгновенного UI
         this.tasks = this.tasks.filter(task => task.id !== id);
-        // 🔄 Sidebar обновится АВТОМАТИЧЕСКИ через taskChanged$ в TaskService
-        // Дополнительный код не нужен!
       },
       error: (err) => console.error('Ошибка удаления задачи:', err)
     });
   }
 
   updateTask(id: number): void {
-    // 🔧 Исправлен путь: ['/tasks', id] вместо ['/tasks/', id]
     this.router.navigate(['/tasks', id]);
   }
 }

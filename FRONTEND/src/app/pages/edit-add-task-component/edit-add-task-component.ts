@@ -35,7 +35,7 @@ export class EditAddTaskComponent implements OnInit {
       description: ['']
     })
   }
-  
+
   ngOnInit(): void {
     this.taskId = Number(this.route.snapshot.paramMap.get('id'));
     const url = this.route.snapshot.url.join('/');
