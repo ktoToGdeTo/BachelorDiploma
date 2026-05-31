@@ -1,10 +1,6 @@
 const path = require('path');
-<<<<<<< HEAD
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-=======
->>>>>>> bdd3ead9eda976f297d7d4ea5886422f8df3f584
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
+
 
 module.exports = {
   entry: './src/index.tsx',
@@ -54,9 +50,6 @@ module.exports = {
           requiredVersion: '^18.3.1',
         },
       },
-    }),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
     }),
   ],
 };

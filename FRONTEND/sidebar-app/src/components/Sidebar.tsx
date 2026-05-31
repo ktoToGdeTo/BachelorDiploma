@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2>Task Manager</h2>
+        <h2>Менеджер задач</h2>
       </div>
       
       {/* Блок профиля пользователя с именем и ролями */}
@@ -48,22 +48,15 @@ const Sidebar: React.FC<SidebarProps> = ({
               📋 Tasks
             </button>
           </li>
-<<<<<<< HEAD
-          <li>
-            <button onClick={() => onNavigate('/users/all')}>
-              👥 Users
-            </button>
-          </li>
-=======
+
           {/* Кнопка Users видна только админам */}
           {isAdmin && (
             <li>
-              <button onClick={() => onNavigate('/users')}>
+              <button onClick={() => onNavigate('/users/all')}>
                 👥 Users
               </button>
             </li>
           )}
->>>>>>> bdd3ead9eda976f297d7d4ea5886422f8df3f584
         </ul>
       </nav>
 
