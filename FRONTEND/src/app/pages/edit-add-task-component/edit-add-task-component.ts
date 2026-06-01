@@ -106,10 +106,7 @@ export class EditAddTaskComponent implements OnInit {
     });
   }
 
-
   onCancel(): void {
     this.router.navigate(['/tasks']);
   }
-
-
 }
