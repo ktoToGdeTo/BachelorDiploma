@@ -36,6 +36,4 @@ public class AuthController {
     public String error() {
         return "Login failed";
     }
-
-
 }
