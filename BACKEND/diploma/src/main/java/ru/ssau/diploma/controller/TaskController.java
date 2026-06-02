@@ -70,4 +70,14 @@ public class TaskController {
         }
         return ResponseEntity.ok(null);
     }
+
+    @GetMapping("/chains/{username}")
+    public ResponseEntity<?> getChains(@PathVariable(name = "username") String username){
+        return ResponseEntity.ok().body(taskService.getChainsByUser(username));
+    }
+
+    @GetMapping("/chains/all")
+    public ResponseEntity<?> getChains(){
+        return ResponseEntity.ok().body(taskService.getAllChains());
+    }
 }

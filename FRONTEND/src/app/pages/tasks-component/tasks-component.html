@@ -2,19 +2,159 @@
   Доступные задачи
 </h2>
 
-<div class="tasks-wrapper">
-  <div class="tasks-list-container">
-    @for (task of tasks; track task.id) {
-    <app-task-card-component [task]="task" (deleteTask)="deleteTask($event)" (changeTask)="updateTask($event)">
-    </app-task-card-component>
-    } @empty {
-    <div class="empty-state">
-      <p class="empty-text">Задач пока нет</p>
-      <p class="empty-hint">Создайте первую задачу, чтобы начать работу!</p>
-      <a href="/tasks/new" class="btn-create-first">
-        Создать задачу
-      </a>
+@if (allChains.length > 0) {
+<section class="section">
+  <h3 class="section-title">
+    Цепочки задач
+    <span class="badge">{{ allChains.length }}</span>
+  </h3>
+
+  <div class="accordion" id="chainsAccordion">
+
+    @for (chain of allChains; track chain.id) {
+    <div class="accordion-item">
+
+      <!-- Заголовок цепочки (всегда виден) -->
+      <h2 class="accordion-header" [id]="'heading-chain-' + chain.id">
+        <button class="accordion-button" [class.collapsed]="!isChainExpanded(chain.id)" type="button"
+          (click)="toggleChain(chain.id)" [attr.aria-expanded]="isChainExpanded(chain.id)"
+          [attr.aria-controls]="'collapse-chain-' + chain.id">
+
+          <span class="d-flex align-items-center gap-2 flex-grow-1">
+            <span class="fw-semibold">{{ chain.titleChain }}</span>
+            <span class="badge bg-light text-dark border">
+              {{ chain.tasksChain.length }} {{ chain.tasksChain.length | plural: ['задача', 'задачи', 'задач'] }}
+            </span>
+          </span>
+
+          @if (authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])) {
+          <button class="btn btn-outline-danger me-3">
+            Удалить цепочку
+          </button>
+          <button class="btn btn-outline-primary me-3">
+            Изменить цепочку
+          </button>
+          }
+
+          @if (chain.deadlineTime) {
+          <span class="text-secondary small d-flex align-items-center gap-1 me-3">
+            <i class="bi bi-clock"></i> Дедлайн: {{ chain.deadlineTime | date:'dd.MM.yyyy' }}
+          </span>
+          }
+        </button>
+      </h2>
+
+      <!-- Тело цепочки (раскрывается) -->
+      <div [id]="'collapse-chain-' + chain.id" class="accordion-collapse collapse"
+        [class.show]="isChainExpanded(chain.id)" [attr.aria-labelledby]="'heading-chain-' + chain.id"
+        data-bs-parent="#chainsAccordion">
+        <!-- Удалите эту строку, если хотите открывать несколько цепочек одновременно -->
+
+        <div class="accordion-body p-3">
+
+          <!-- Нумерованный список задач (Bootstrap list-group-numbered) -->
+          <ol class="list-group list-group-numbered">
+            @for (task of chain.tasksChain; track task.id) {
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+              [class.opacity-50]="task.status === 'DONE'">
+
+              <!-- Название задачи (клик открывает модалку) -->
+              <span class="flex-grow-1 text-decoration-underline cursor-pointer me-3"
+                (click)="openTaskDetails(task, chain)" style="cursor: pointer;"
+                [title]="'Шаг ' + (task.chain_order! + 1)">
+                {{ task.title }}
+              </span>
+
+              <!-- Кнопка подтверждения (показывается только если можно подтвердить) -->
+              @if (authService.getCurrentUser()?.username === task.id) {
+              <button class="btn btn-sm btn-success">
+                ✓ Выполнено
+              </button>
+              }
+            </li>
+            }
+          </ol>
+
+        </div>
+      </div>
     </div>
     }
   </div>
-</div>
+</section>
+}
+
+<div>
+  @if(tasks.length > 0){
+  <div class="controls-panel">
+    <div class="control-group">
+      <label for="sortField">Сортировать по:</label>
+      <select id="sortField" [(ngModel)]="sortField" class="select-control">
+        <option value="created_time">Дате создания</option>
+        <option value="modified_time">Дате изменения</option>
+        <option value="title">Имени (названию)</option>
+      </select>
+
+      <select [(ngModel)]="sortOrder" class="select-control">
+        <option value="desc">По убыванию</option>
+        <option value="asc">По возрастанию</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="groupBy">Группировать по:</label>
+      <select id="groupBy" [(ngModel)]="groupBy" class="select-control">
+        <option value="none">Без группировки</option>
+        <option value="status">Статусу</option>
+        @if(authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])){
+        <option value="user">Пользователю</option>
+        }
+      </select>
+    </div>
+  </div>
+  }
+
+  <section class="section">
+    <h3 class="section-title">
+      Задачи вне цепочек
+      <span class="badge">{{ standaloneTasks.length }}</span>
+    </h3>
+
+    @if (standaloneTasks.length === 0 && taskChains.length === 0) {
+    <div class="empty-state">
+      <p class="empty-text">Задач пока нет</p>
+      <p class="empty-hint">Создайте первую задачу, чтобы начать работу!</p>
+      <a href="/tasks/new" class="btn-create-first">Создать задачу</a>
+    </div>
+    } @else if (standaloneTasks.length === 0) {
+    <p class="no-standalone-hint">Все задачи входят в цепочки</p>
+    } @else {
+    <div>
+      @for (group of processedTasks; track group.key) {
+
+      @if (groupBy !== 'none') {
+      <h3 class="group-title">
+        @switch (group.key) {
+        @case ('OPEN') { Открыто }
+        @case ('CLOSED') { Закрыто }
+        @case ('IN_PROGRESS') { В процессе }
+        @case ('DONE') { Завершено }
+        @default { {{ group.key }} }
+        }
+        <span class="group-count">({{ group.tasks.length }})</span>
+      </h3>
+      }
+      <div>
+        @for (task of group.tasks; track task.id) {
+        <app-task-card-component [task]="task" (deleteTask)="deleteTask($event)" (changeTask)="updateTask($event)">
+        </app-task-card-component>
+        }
+      </div>
+      }
+    </div>
+    }
+  </section>
+
+  @if (selectedTask) {
+  <app-info-task-modal [task]="selectedTask" [chain]="selectedTaskChain" (close)="closeModal()">
+  </app-info-task-modal>
+  }

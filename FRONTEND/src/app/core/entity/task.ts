@@ -6,4 +6,7 @@ export interface Task {
     modified_time?: Date;
     status: string;
     created_by?: string;
+    
+    chain_id?: number;
+    chain_order?: number;
 }

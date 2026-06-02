@@ -100,13 +100,16 @@ export class EditAddTaskComponent implements OnInit {
         this.router.navigate(['/tasks']);
       },
       error: (error) => {
-        alert('Слишком много активных задач')
+        alert('Ошибка изменения задачи.')
         console.error('Error updating task:', error);
       }
     });
   }
 
+
   onCancel(): void {
     this.router.navigate(['/tasks']);
   }
+
+
 }

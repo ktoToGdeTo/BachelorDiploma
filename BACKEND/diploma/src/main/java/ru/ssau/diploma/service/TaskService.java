@@ -1,19 +1,22 @@
 package ru.ssau.diploma.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.ssau.diploma.entity.Task;
+import ru.ssau.diploma.entity.TasksChain;
 import ru.ssau.diploma.entity.User;
 import ru.ssau.diploma.entity.dto.TaskDto;
+import ru.ssau.diploma.entity.dto.TasksChainDto;
 import ru.ssau.diploma.exception.TaskNotFoundException;
+import ru.ssau.diploma.repository.TaskChainRepository;
 import ru.ssau.diploma.repository.TaskRepository;
 import ru.ssau.diploma.repository.TaskStatusRepository;
 import ru.ssau.diploma.repository.UserRepository;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,8 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskStatusRepository taskStatusRepository;
+    private final TaskChainRepository taskChainRepository;
+
 
     private TaskDto taskToDto(Task task){
         TaskDto taskDto = new TaskDto();
@@ -34,7 +39,20 @@ public class TaskService {
         taskDto.setModified_time(task.getChangedTime());
         taskDto.setCreated_by(task.getUser().getUsername());
         taskDto.setStatus(task.getStatus().getStatusName());
+        if(task.getChain() != null) {
+            taskDto.setChain_id(task.getChain().getId());
+            taskDto.setChain_order(task.getChainOrder());
+        }
         return taskDto;
+    }
+
+    private TasksChainDto toChainDto(TasksChain tasksChain) {
+        TasksChainDto tasksChainDto = new TasksChainDto();
+        tasksChainDto.setId(tasksChain.getId());
+        tasksChainDto.setTitleChain(tasksChain.getTitleChain());
+        tasksChainDto.setDeadlineTime(tasksChain.getDeadlineTime());
+        tasksChainDto.setTasksChain(tasksChain.getTasksChain().stream().map(this::taskToDto).toList());
+        return tasksChainDto;
     }
 
 
@@ -83,5 +101,15 @@ public class TaskService {
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskStatusRepository.findByStatusName(taskDto.getStatus()));
         taskRepository.save(task);
+    }
+
+    public List<TasksChainDto> getChainsByUser(String username){
+        List<TasksChain> res = taskChainRepository.findChainsByUserUsername(username);
+        return res.stream().map(this::toChainDto).toList();
+    }
+
+    public List<TasksChainDto> getAllChains(){
+        List<TasksChain> res = taskChainRepository.findAll();
+        return res.stream().map(this::toChainDto).toList();
     }
 }

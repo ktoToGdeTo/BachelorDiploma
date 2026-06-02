@@ -5,25 +5,159 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from '../task-card-component/task-card-component';
+import { ChainTasks } from '../../core/entity/chainTasks';
+import { FormsModule } from '@angular/forms';
+import { InfoTaskModal } from '../info-task-modal/info-task-modal';
+import { PluralPipe } from '../../core/pipes/plural-pipe';
 
 @Component({
   selector: 'app-tasks-component',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent],
+  imports: [CommonModule, TaskCardComponent, FormsModule, InfoTaskModal, PluralPipe],
   templateUrl: './tasks-component.html',
   styleUrl: './tasks-component.css',
 })
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];
+  allChains: ChainTasks[] = [];
+   expandedChains = new Set<number>();
 
-  private authService = inject(AuthService);
+  sortField: 'title' | 'created_time' | 'modified_time' = 'created_time';
+  sortOrder: 'asc' | 'desc' = 'desc';
+  groupBy: 'none' | 'status' | 'user' = 'none';
+
+  authService = inject(AuthService);
   private taskService = inject(TaskService);
   private router = inject(Router);
   private cd = inject(ChangeDetectorRef);
 
+  selectedTask: Task | null = null;
+  selectedTaskChain: ChainTasks | null = null;
+
   ngOnInit(): void {
     this.loadTasks();
   }
+
+  private sortTasks(tasks: Task[]): Task[] {
+    return [...tasks].sort((a, b) => {
+      if (this.sortField === 'title') {
+        const valA = (a.title || '').toLowerCase();
+        const valB = (b.title || '').toLowerCase();
+        return this.sortOrder === 'asc'
+          ? valA.localeCompare(valB)
+          : valB.localeCompare(valA);
+      } else {
+        const dateA = a[this.sortField];
+        const dateB = b[this.sortField];
+        const valA = dateA ? new Date(dateA).getTime() : 0;
+        const valB = dateB ? new Date(dateB).getTime() : 0;
+        return this.sortOrder === 'asc' ? valA - valB : valB - valA;
+      }
+    });
+  }
+
+  // Геттер для отсортированного и сгруппированного списка
+  get processedTasks(): { key: string; tasks: Task[] }[] {
+    if (!this.tasks || this.tasks.length === 0) return [];
+
+    let tasks = [...this.standaloneTasks];
+
+    // 1. Сортировка
+    const sorted = this.sortTasks(tasks);
+
+    // 2. Группировка
+    if (this.groupBy === 'none') {
+      return [{ key: 'Все задачи', tasks: sorted }];
+    }
+
+    const groups = new Map<string, Task[]>();
+
+    sorted.forEach(task => {
+      let groupKey = 'Без группы';
+
+      if (this.groupBy === 'status') {
+        groupKey = task.status;
+      } else if (this.groupBy === 'user') {
+        // В вашем интерфейсе есть только created_by
+        groupKey = task.created_by || 'Неизвестный пользователь';
+      }
+
+      if (!groups.has(groupKey)) {
+        groups.set(groupKey, []);
+      }
+      groups.get(groupKey)!.push(task);
+    });
+
+    return Array.from(groups, ([key, tasks]) => ({ key, tasks }));
+  }
+
+  get standaloneTasks(): Task[] {
+    return this.sortTasks(this.tasks.filter(t => !t.chain_id));
+  }
+
+  get taskChains(): ChainTasks[] {
+    const chainMap = new Map<number, ChainTasks>();
+    
+    for (const chain of this.allChains) {
+        chainMap.set(chain.id, {
+          id: chain.id,
+          titleChain: chain.titleChain,
+          tasksChain: chain.tasksChain,
+          deadlineTime: chain.deadlineTime
+        });
+      
+    }
+
+    const chains = Array.from(chainMap.values());
+      return chains;
+    
+  }
+
+
+  openTaskDetails(task: Task, chain?: ChainTasks): void {
+    this.selectedTask = task;
+    this.selectedTaskChain = chain ?? null;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal(): void {
+    this.selectedTask = null;
+    this.selectedTaskChain = null;
+    document.body.style.overflow = '';
+  }
+
+
+toggleChain(chainId: number): void {
+    if (this.expandedChains.has(chainId)) {
+      this.expandedChains.delete(chainId);
+    } else {
+      this.expandedChains.add(chainId);
+    }
+  }
+
+  isChainExpanded(chainId: number): boolean {
+    return this.expandedChains.has(chainId);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   private loadTasks(): void {
     const isAdminOrMod = this.authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR']);
@@ -32,8 +166,17 @@ export class TasksComponent implements OnInit {
       : this.taskService.getTasks();
 
     request$.subscribe({
-      next: (data) => this.tasks = data,
+      next: (data) => { this.tasks = data },
       error: (err) => console.error('Ошибка загрузки задач:', err),
+      complete: () => this.cd.markForCheck()
+    });
+
+    const request2$ = isAdminOrMod
+      ? this.taskService.getAllChains()
+      : this.taskService.getChains(this.authService.getCurrentUser()?.username!);
+
+    request2$.subscribe({
+      next: (data) => { this.allChains = data },
       complete: () => this.cd.markForCheck()
     });
   }

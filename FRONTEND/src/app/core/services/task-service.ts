@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../environments/environment";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { ChainTasks } from "../entity/chainTasks";
 
 @Injectable({
   providedIn: 'root',
@@ -45,4 +46,13 @@ export class TaskService {
       tap(() => this.taskChangedSubject.next())
     );
   }
+
+  getChains(username: string): Observable<ChainTasks[]>{
+    return this.http.get<ChainTasks[]>(this.url + "/tasks/chains/" + username);
+  }
+
+  getAllChains(): Observable<ChainTasks[]>{
+    return this.http.get<ChainTasks[]>(this.url + "/tasks/chains/all");
+  }
+
 }

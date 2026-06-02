@@ -38,4 +38,11 @@ public class Task {
     @JoinColumn(name = "created_by")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chain_id")
+    private TasksChain chain;
+
+    @Column(name = "chain_order")
+    private Integer chainOrder;
 }

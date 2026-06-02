@@ -1,0 +1,76 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-window">
+
+    <div class="modal-header">
+      <h2 class="modal-title">{{ task.title }}</h2>
+      <button class="modal-close" (click)="close.emit()">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="detail-row">
+        <span class="detail-label">Статус:</span>
+        <span class="status-badge" [class]="'status-' + task.status.toLowerCase()">
+          @switch(task.status) {
+          @case ("OPEN") { Открыто }
+          @case ("CLOSED") { Закрыто }
+          @case ("IN_PROGRESS") { В процессе }
+          @case ("DONE") { Завершено }
+          }
+        </span>
+      </div>
+
+      @if (chain) {
+      <div class="detail-row">
+        <span class="detail-label">Цепочка заданий:</span>
+        <span class="detail-text">
+        {{ chain.titleChain }} (шаг {{ task.chain_order }} из {{ chain.tasksChain.length }})
+        </span>
+      </div>
+      }
+
+      @if (task.description) {
+      <div class="detail-row">
+        <span class="detail-label">Описание:</span>
+        <p class="detail-text">{{ task.description }}</p>
+      </div>
+      }
+
+      <div class="detail-row">
+        <span class="detail-label">Создано:</span>
+        <span>{{ task.created_time | date:'dd.MM.yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Изменено:</span>
+        <span>{{ task.modified_time | date:'dd.MM.yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Пользователь:</span>
+        <span>{{ task.created_by }}</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      @if (task.created_by === authService.getCurrentUser()?.username || authService.hasRoles(['ROLE_ADMIN',
+      'ROLE_MODERATOR'])) {
+        @if(authService.hasRoles(['ROLE_ADMIN','ROLE_MODERATOR'])){
+<button class="btn btn-outline-danger me-1">
+            Удалить
+          </button>
+          <button class="btn btn-outline-primary me-1">
+            Изменить
+          </button>
+        }
+      @if(task.status !== 'DONE'){
+      <button class="btn btn-success" (click)="onConfirm()">
+        Подтвердить выполнение
+      </button>
+      }
+
+      }
+      <button class="btn btn-outline-secondary" (click)="close.emit()">Закрыть</button>
+    </div>
+  </div>
+</div>

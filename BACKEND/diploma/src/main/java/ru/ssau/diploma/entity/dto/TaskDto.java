@@ -15,4 +15,6 @@ public class TaskDto {
     private LocalDateTime modified_time;
     private String status;
     private String created_by;
+    private Long chain_id;
+    private Integer chain_order;
 }
