@@ -24,10 +24,21 @@
       <div class="detail-row">
         <span class="detail-label">Цепочка заданий:</span>
         <span class="detail-text">
-        {{ chain.titleChain }} (шаг {{ task.chain_order }} из {{ chain.tasksChain.length }})
+          {{ chain.titleChain }} (шаг {{ task.chain_order }} из {{ chain.tasksChain.length }})
         </span>
       </div>
       }
+
+       @if (isBlockedByPreviousTask) {
+        <div class="alert alert-warning py-2 px-3 mt-2 d-flex align-items-center small" role="alert">
+          <i class="bi bi-lock-fill me-2 text-warning"></i>
+          <span>
+            Ожидает выполнения предыдущего шага: 
+            <strong class="text-dark">«{{ previousTask!.title }}»</strong>
+          </span>
+        </div>
+      }
+      
 
       @if (task.description) {
       <div class="detail-row">
@@ -55,21 +66,20 @@
     <div class="modal-footer">
       @if (task.created_by === authService.getCurrentUser()?.username || authService.hasRoles(['ROLE_ADMIN',
       'ROLE_MODERATOR'])) {
-        @if(authService.hasRoles(['ROLE_ADMIN','ROLE_MODERATOR'])){
-<button class="btn btn-outline-danger me-1">
-            Удалить
-          </button>
-          <button class="btn btn-outline-primary me-1">
-            Изменить
-          </button>
-        }
-      @if(task.status !== 'DONE'){
+      @if(authService.hasRoles(['ROLE_ADMIN','ROLE_MODERATOR'])){
+      <button class="btn btn-outline-danger me-1" (click)="onDelete()">
+        Удалить
+      </button>
+      <button class="btn btn-outline-primary me-1" (click)="onChange()">
+        Изменить
+      </button>
+      }
+      @if(task.status !== 'DONE' && task.created_by === authService.getCurrentUser()?.username && !isBlockedByPreviousTask){
       <button class="btn btn-success" (click)="onConfirm()">
         Подтвердить выполнение
       </button>
       }
-
-      }
+    }
       <button class="btn btn-outline-secondary" (click)="close.emit()">Закрыть</button>
     </div>
   </div>

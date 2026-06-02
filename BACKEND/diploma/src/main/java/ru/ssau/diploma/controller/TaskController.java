@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.ssau.diploma.entity.TasksChain;
 import ru.ssau.diploma.entity.dto.TaskDto;
+import ru.ssau.diploma.entity.dto.TasksChainDto;
 import ru.ssau.diploma.exception.TaskNotFoundException;
 import ru.ssau.diploma.service.TaskService;
 
@@ -79,5 +81,27 @@ public class TaskController {
     @GetMapping("/chains/all")
     public ResponseEntity<?> getChains(){
         return ResponseEntity.ok().body(taskService.getAllChains());
+    }
+
+    @PostMapping("/chain/create")
+    public ResponseEntity<?> createChain(@RequestBody TasksChainDto tasksChainDto){
+        taskService.createChain(tasksChainDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/chain/{id}")
+    public ResponseEntity<?> getChain(@PathVariable(name = "id") Long id){
+        return ResponseEntity.ok().body(taskService.getChainById(id));
+    }
+
+    @DeleteMapping("chain/delete/{id}")
+    public ResponseEntity<?> deleteChain(@PathVariable Long id){
+        taskService.deleteChain(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/chain/edit/{id}")
+    public ResponseEntity<?> updateChain(@PathVariable Long id, @RequestBody TasksChainDto tasksChainDto){
+        taskService.updateChain(id, tasksChainDto);
+        return ResponseEntity.ok().build();
     }
 }

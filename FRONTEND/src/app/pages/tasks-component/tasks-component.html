@@ -16,11 +16,18 @@
 
       <!-- Заголовок цепочки (всегда виден) -->
       <h2 class="accordion-header" [id]="'heading-chain-' + chain.id">
-        <button class="accordion-button" [class.collapsed]="!isChainExpanded(chain.id)" type="button"
-          (click)="toggleChain(chain.id)" [attr.aria-expanded]="isChainExpanded(chain.id)"
-          [attr.aria-controls]="'collapse-chain-' + chain.id">
+        <button class="accordion-button" 
+              [class.collapsed]="!isChainExpanded(chain.id)" 
+              [class.is-chain-completed]="isChainCompleted(chain)"
+              type="button"
+              (click)="toggleChain(chain.id)" 
+              [attr.aria-expanded]="isChainExpanded(chain.id)"
+              [attr.aria-controls]="'collapse-chain-' + chain.id">
 
           <span class="d-flex align-items-center gap-2 flex-grow-1">
+            @if (isChainCompleted(chain)) {
+            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+          }
             <span class="fw-semibold">{{ chain.titleChain }}</span>
             <span class="badge bg-light text-dark border">
               {{ chain.tasksChain.length }} {{ chain.tasksChain.length | plural: ['задача', 'задачи', 'задач'] }}
@@ -28,10 +35,10 @@
           </span>
 
           @if (authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])) {
-          <button class="btn btn-outline-danger me-3">
+          <button class="btn btn-outline-danger me-3" (click)="deleteChain(chain.id!)">
             Удалить цепочку
           </button>
-          <button class="btn btn-outline-primary me-3">
+          <button class="btn btn-outline-primary me-3" (click)="editChain(chain.id!)">
             Изменить цепочку
           </button>
           }
@@ -52,25 +59,19 @@
 
         <div class="accordion-body p-3">
 
-          <!-- Нумерованный список задач (Bootstrap list-group-numbered) -->
           <ol class="list-group list-group-numbered">
             @for (task of chain.tasksChain; track task.id) {
             <li class="list-group-item d-flex justify-content-between align-items-center"
-              [class.opacity-50]="task.status === 'DONE'">
+              [class.task-completed]="task.status === 'DONE'"
+              [class.task-incompleted]="task.status !== 'DONE'">
 
-              <!-- Название задачи (клик открывает модалку) -->
-              <span class="flex-grow-1 text-decoration-underline cursor-pointer me-3"
+              <span class="flex-grow-1 cursor-pointer me-3 ps-2"
                 (click)="openTaskDetails(task, chain)" style="cursor: pointer;"
                 [title]="'Шаг ' + (task.chain_order! + 1)">
                 {{ task.title }}
               </span>
 
-              <!-- Кнопка подтверждения (показывается только если можно подтвердить) -->
-              @if (authService.getCurrentUser()?.username === task.id) {
-              <button class="btn btn-sm btn-success">
-                ✓ Выполнено
-              </button>
-              }
+
             </li>
             }
           </ol>
@@ -155,6 +156,7 @@
   </section>
 
   @if (selectedTask) {
-  <app-info-task-modal [task]="selectedTask" [chain]="selectedTaskChain" (close)="closeModal()">
+  <app-info-task-modal [task]="selectedTask" [chain]="selectedTaskChain" (confirm)="confirmTask($event)"
+    (close)="closeModal()" (change)="updateTask($event)" (delete)="deleteTask($event)">
   </app-info-task-modal>
   }

@@ -14,8 +14,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       <aside className="blue-sidebar">
         <div className="sidebar-header">
           <a href="/" className="sidebar-brand">
-            <div className="brand-text">Менеджер задач</div>            
-              <div className="user-roles">Микрофронтенд на React</div>
+            <div className="brand-text">Менеджер задач</div>
+            <div className="user-roles">Микрофронтенд на React</div>
 
           </a>
         </div>
@@ -34,17 +34,21 @@ const Sidebar: React.FC<SidebarProps> = ({
                   Создать задачу
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" onClick={() => onNavigate("/chain/create")}>
-                  Создать задачу
-                </a>
-              </li>
 
-              {user?.roles?.includes("Администратор") && (<li className="nav-item">
-                <a className="nav-link" onClick={() => onNavigate("/users/all")}>
-                  Все пользователи
-                </a>
-              </li>
+
+              {user?.roles?.includes("Администратор") && (
+                <div>
+                  <li className="nav-item">
+                    <a className="nav-link" onClick={() => onNavigate("/chain/create")}>
+                      Создать цепочку
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" onClick={() => onNavigate("/users/all")}>
+                      Все пользователи
+                    </a>
+                  </li>
+                </div>
               )}
             </ul>
           </nav>

@@ -139,6 +139,64 @@
   font-weight: normal;
 }
 
+/* Мягкий светло-зеленый фон */
+.task-completed {
+  background-color: #e8f5e9 !important; /* Очень светлый, приятный глазу зеленый */
+  color: #1b5e20 !important;            /* Темно-зеленый текст для хорошего контраста */
+  border-left: 4px solid #4caf50 !important; /* Акцентная полоска слева (выглядит профессионально) */
+  transition: all 0.3s ease;            /* Плавное изменение цвета при наведении/изменении статуса */
+}
+
+/* Легкий эффект при наведении на выполненную задачу */
+.task-completed:hover {
+  background-color: #c8e6c9 !important;
+  cursor: pointer;
+}
+
+
+
+
+/* Мягкий светло-зеленый фон */
+.task-incompleted {
+  background-color: #e8f2f5 !important; /* Очень светлый, приятный глазу зеленый */
+  color: #000000 !important;            /* Темно-зеленый текст для хорошего контраста */
+  border-left: 4px solid #58d4f3 !important; /* Акцентная полоска слева (выглядит профессионально) */
+  transition: all 0.3s ease;            /* Плавное изменение цвета при наведении/изменении статуса */
+}
+
+/* Легкий эффект при наведении на выполненную задачу */
+.task-incompleted:hover {
+  background-color: #c8e5e6 !important;
+  cursor: pointer;
+}
+
+/* Когда цепочка выполнена, меняем переменные цвета кнопки аккордеона */
+.accordion-button.is-chain-completed {
+  /* Светло-зеленый фон (аналог bg-success-subtle) */
+  --bs-accordion-btn-bg: #d1e7dd !important;
+  /* Темно-зеленый текст для контраста */
+  --bs-accordion-btn-color: #0f5132 !important;
+  
+  /* Сохраняем эти цвета даже когда аккордеон раскрыт (active state) */
+  --bs-accordion-active-bg: #d1e7dd !important;
+  --bs-accordion-active-color: #0f5132 !important;
+  
+  /* Убираем стандартную синюю тень фокуса, заменяем на зеленую */
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+}
+
+/* Опционально: меняем цвет стрелочки аккордеона на зеленый при выполнении */
+.accordion-button.is-chain-completed:not(.collapsed)::after {
+  filter: invert(39%) sepia(93%) saturate(441%) hue-rotate(84deg) brightness(90%) contrast(93%);
+}
+
+/* Легкий эффект при наведении на выполненную цепочку */
+.accordion-button.is-chain-completed:hover {
+  --bs-accordion-btn-bg: #bbf0c9 !important; /* Чуть темнее при наведении */
+}
+
+
+
 /* Адаптив */
 @media (max-width: 600px) {
   .page-title {

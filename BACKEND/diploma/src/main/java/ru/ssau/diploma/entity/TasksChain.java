@@ -24,7 +24,12 @@ public class TasksChain {
 
     private LocalDateTime deadlineTime;
 
-    @OneToMany(mappedBy = "chain", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("chainOrder ASC")
     private List<Task> tasksChain = new ArrayList<>();
+
+    public void addTask(Task task){
+        tasksChain.add(task);
+        task.setChain(this);
+    }
 }

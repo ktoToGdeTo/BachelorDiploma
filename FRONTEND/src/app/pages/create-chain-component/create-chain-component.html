@@ -1,1 +1,135 @@
-<p>create-chain-component works!</p>
+<div class="container py-4">
+  <h2 class="mb-4">Создание новой цепочки задач</h2>
+
+  <form [formGroup]="chainForm" (ngSubmit)="onSubmit()">
+    
+    <!-- === Блок информации о цепочке === -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Информация о цепочке</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label for="titleChain" class="form-label fw-bold">Название цепочки <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              id="titleChain" 
+              formControlName="titleChain" 
+              class="form-control" 
+              [class.is-invalid]="chainForm.get('titleChain')?.invalid && chainForm.get('titleChain')?.touched"
+              placeholder="Например: Онбординг нового сотрудника">
+            <div class="invalid-feedback">
+              Введите название (минимум 3 символа).
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="deadlineTime" class="form-label fw-bold">Дедлайн</label>
+            <input 
+              type="datetime-local" 
+              id="deadlineTime" 
+              formControlName="deadlineTime" 
+              class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- === Блок задач (FormArray) === -->
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Задачи в цепочке</h5>
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="addTask()">
+        <i class="bi bi-plus-lg"></i> Добавить задачу
+      </button>
+    </div>
+
+    <!-- 1. Добавляем cdkDropList и событие drop -->
+    <div formArrayName="tasksChain" 
+         cdkDropList 
+         (cdkDropListDropped)="drop($event)"
+         class="task-drop-list">
+      
+      <!-- 2. Изменили track на taskGroup и добавили cdkDrag -->
+      @for (taskGroup of tasksArray.controls; track taskGroup; let i = $index) {
+        <div cdkDrag 
+             [formGroupName]="i" 
+             class="card mb-3 border-start border-4 border-info shadow-sm task-drag-item">
+          
+          <div class="card-body position-relative d-flex">
+            
+            <!-- 3. Добавляем "ручку" для перетаскивания (иконка) -->
+            <div cdkDragHandle class="drag-handle me-3 d-flex align-items-center text-muted" title="Перетащите для изменения порядка">
+              <i class="bi bi-grip-vertical fs-4"></i>
+            </div>
+
+            <!-- Кнопка удаления -->
+            @if (tasksArray.length > 1) {
+              <button 
+                type="button" 
+                class="btn btn-close position-absolute top-0 end-0 m-2" 
+                (click)="removeTask(i)"
+                title="Удалить эту задачу из цепочки">
+              </button>
+            }
+
+            <div class="flex-grow-1">
+              <h6 class="card-subtitle mb-3 text-muted">Шаг {{ i + 1 }}</h6>
+
+              <div class="row g-3">
+                <!-- Название задачи -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Название задачи <span class="text-danger">*</span></label>
+                  <input 
+                    type="text" 
+                    formControlName="title" 
+                    class="form-control" 
+                    [class.is-invalid]="hasError(taskGroup, 'title', 'required') || hasError(taskGroup, 'title', 'minlength')"
+                    placeholder="Что нужно сделать?">
+                </div>
+
+                <!-- Исполнитель -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Исполнитель <span class="text-danger">*</span></label>
+                  <select 
+                    formControlName="created_by" 
+                    class="form-select"
+                    [class.is-invalid]="hasError(taskGroup, 'userLogin', 'required')">
+                    <option value="" disabled>Выберите пользователя</option>
+                    @for (user of usersList; track user.username) {
+                      <option [value]="user.username">{{ user.username }}</option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Описание задачи -->
+                <div class="col-12">
+                  <label class="form-label fw-bold">Описание</label>
+                  <textarea 
+                    formControlName="description" 
+                    class="form-control" 
+                    rows="2" 
+                    placeholder="Подробности выполнения задачи..."></textarea>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- === Кнопки действий === -->
+    <div class="d-flex gap-3 mt-4">
+      <button type="submit" class="btn btn-success btn-lg" [disabled]="isSubmitting">
+        @if (isSubmitting) {
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        }
+        Создать цепочку
+      </button>
+      <button type="button" class="btn btn-secondary btn-lg" (click)="router.navigate(['/tasks'])">
+        Отмена
+      </button>
+    </div>
+
+  </form>
+</div>

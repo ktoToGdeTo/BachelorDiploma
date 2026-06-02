@@ -21,7 +21,13 @@ export const routes: Routes = [
     ],
     canActivate: [authGuard]    
   },
-  { path: "chain/create", component: CreateChainComponent, canActivate: [authGuard, roleGuard(['ROLE_ADMIN', 'ROLE_MODERATOR'])] },
+  { path: "chain",
+    children: [
+      { path: ":id", component: CreateChainComponent },
+      { path: "create", component: CreateChainComponent }
+      
+    ],
+    canActivate: [authGuard, roleGuard(['ROLE_ADMIN', 'ROLE_MODERATOR'])] },
   
   { path: "**", redirectTo: "login" }
 ];

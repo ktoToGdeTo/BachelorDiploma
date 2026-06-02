@@ -99,7 +99,7 @@ export class TasksComponent implements OnInit {
     const chainMap = new Map<number, ChainTasks>();
     
     for (const chain of this.allChains) {
-        chainMap.set(chain.id, {
+        chainMap.set(chain.id!, {
           id: chain.id,
           titleChain: chain.titleChain,
           tasksChain: chain.tasksChain,
@@ -127,16 +127,16 @@ export class TasksComponent implements OnInit {
   }
 
 
-toggleChain(chainId: number): void {
-    if (this.expandedChains.has(chainId)) {
-      this.expandedChains.delete(chainId);
+toggleChain(chainId?: number): void {
+    if (this.expandedChains.has(chainId!)) {
+      this.expandedChains.delete(chainId!);
     } else {
-      this.expandedChains.add(chainId);
+      this.expandedChains.add(chainId!);
     }
   }
 
-  isChainExpanded(chainId: number): boolean {
-    return this.expandedChains.has(chainId);
+  isChainExpanded(chainId?: number): boolean {
+    return this.expandedChains.has(chainId!);
   }
 
 
@@ -187,6 +187,7 @@ toggleChain(chainId: number): void {
     this.taskService.deleteTask(id).subscribe({
       next: () => {
         this.tasks = this.tasks.filter(task => task.id !== id);
+        this.cd.markForCheck();
       },
       error: (err) => console.error('Ошибка удаления задачи:', err)
     });
@@ -194,5 +195,40 @@ toggleChain(chainId: number): void {
 
   updateTask(id: number): void {
     this.router.navigate(['/tasks', id]);
+  }
+
+  confirmTask(task: Task): void {
+    task.status = 'DONE';
+    this.taskService.updateTask(task).subscribe({
+      next: (response) => {
+        this.router.navigate(['/tasks']);
+      },
+      error: (error) => {
+        alert('Ошибка изменения задачи.')
+        console.error('Error updating task:', error);
+      }
+    });
+  }
+
+  deleteChain(id: number): void {
+    this.taskService.deleteChain(id).subscribe({
+      next: () => {
+        this.cd.markForCheck();
+      },
+      error: (err) => console.error('Ошибка удаления цепочки:', err),
+      complete: () => this.cd.markForCheck()
+    });
+  }
+
+  editChain(id: number): void {
+    this.router.navigate(['/chain/', id]);
+  }
+
+  isChainCompleted(chain: any): boolean {
+    if (!chain.tasksChain || chain.tasksChain.length === 0) {
+      return false; 
+    }
+    // every() вернет true только если каждая задача имеет статус 'DONE'
+    return chain.tasksChain.every((task: any) => task.status === 'DONE');
   }
 }

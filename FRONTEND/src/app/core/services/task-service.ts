@@ -55,4 +55,21 @@ export class TaskService {
     return this.http.get<ChainTasks[]>(this.url + "/tasks/chains/all");
   }
 
+  createChain(chain: ChainTasks): Observable<any>{
+    return this.http.post(this.url + "/tasks/chain/create", chain);
+  }
+
+  deleteChain(id: number): Observable<any> {
+    return this.http.delete(this.url + "/tasks/chain/delete/" + id).pipe(
+      tap(() => this.taskChangedSubject.next())
+    );
+  }
+
+  getChain(id: number): Observable<ChainTasks> {
+    return this.http.get<ChainTasks>(this.url + "/tasks/chain/" + id);
+  }
+
+  updateChain(id: number, chain: ChainTasks): Observable<any> {
+    return this.http.post(this.url + "/tasks/chain/edit/" + id, chain);
+  }
 }

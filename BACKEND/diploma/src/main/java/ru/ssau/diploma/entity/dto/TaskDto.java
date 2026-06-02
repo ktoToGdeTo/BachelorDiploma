@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TaskDto {
-    private long id;
+    private Long id;
     private String title;
     private String description;
     private LocalDateTime created_time;
