@@ -34,7 +34,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                   Создать задачу
                 </a>
               </li>
-
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => onNavigate("/chain/create")}>
+                  Создать задачу
+                </a>
+              </li>
 
               {user?.roles?.includes("Администратор") && (<li className="nav-item">
                 <a className="nav-link" onClick={() => onNavigate("/users/all")}>

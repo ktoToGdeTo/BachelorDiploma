@@ -6,6 +6,7 @@ import { RegisterComponent } from './pages/register-component/register-component
 import { UsersComponent } from './pages/users-component/users-component';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+import { CreateChainComponent } from './pages/create-chain-component/create-chain-component';
 export const routes: Routes = [
   { path: "", redirectTo:"tasks", pathMatch:"full" },
   { path: "register", component: RegisterComponent },
@@ -20,6 +21,7 @@ export const routes: Routes = [
     ],
     canActivate: [authGuard]    
   },
+  { path: "chain/create", component: CreateChainComponent, canActivate: [authGuard, roleGuard(['ROLE_ADMIN', 'ROLE_MODERATOR'])] },
   
   { path: "**", redirectTo: "login" }
 ];
