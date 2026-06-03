@@ -24,7 +24,7 @@
       <div class="detail-row">
         <span class="detail-label">Цепочка заданий:</span>
         <span class="detail-text">
-          {{ chain.titleChain }} (шаг {{ task.chain_order }} из {{ chain.tasksChain.length }})
+          {{ chain.titleChain }} (шаг {{ (task.chain_order!)+1  }} из {{ chain.tasksChain.length }})
         </span>
       </div>
       }

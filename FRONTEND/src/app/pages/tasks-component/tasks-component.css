@@ -1,403 +1,349 @@
-/* Контейнер страницы */
+/* ==========================================
+   1. ОСНОВНОЙ КОНТЕЙНЕР И ЗАГОЛОВКИ
+   ========================================== */
+.tasks-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
 .page-title {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #0f172a;
-  margin: 0 0 24px 0;
+  margin: 0 0 32px 0;
   padding-bottom: 16px;
   border-bottom: 2px solid #bae6fd;
 }
 
 .title-icon {
-  font-size: 28px;
+  font-size: 32px;
 }
 
-.tasks-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
+.section {
+  margin-bottom: 40px;
 }
 
-.tasks-list-container {
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Состояние "пусто" */
-.empty-state {
-  text-align: center;
-  padding: 60px 40px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 2px dashed #7dd3fc;
-  border-radius: 16px;
-  color: #334155;
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.empty-text {
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0 0 8px 0;
-}
-
-.empty-hint {
-  font-size: 14px;
-  color: #64748b;
-  margin: 0 0 24px 0;
-}
-
-.btn-create-first {
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: #0284c7;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
+  gap: 10px;
+}
+
+.badge-count {
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  padding: 4px 10px;
+  border-radius: 99px;
 }
 
-.btn-create-first:hover {
-  background: #0369a1;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3);
+.badge-count.light {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
 }
 
-.btn-icon {
-  font-size: 18px;
-}
-
+/* ==========================================
+   2. ПАНЕЛЬ УПРАВЛЕНИЯ (ФИЛЬТРЫ)
+   ========================================== */
 .controls-panel {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .control-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .control-group label {
-  font-weight: 500;
-  color: #555;
-  white-space: nowrap;
-}
-
-.select-control {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
   font-size: 14px;
-  cursor: pointer;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  margin-bottom: 0;
 }
 
-.select-control:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+.select-wrapper {
+  position: relative;
+  min-width: 180px;
 }
 
-.group-title {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 25px 0 15px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e9ecef;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.group-count {
-  font-size: 0.9rem;
-  color: #6c757d;
-  font-weight: normal;
-}
-
-/* Мягкий светло-зеленый фон */
-.task-completed {
-  background-color: #e8f5e9 !important; /* Очень светлый, приятный глазу зеленый */
-  color: #1b5e20 !important;            /* Темно-зеленый текст для хорошего контраста */
-  border-left: 4px solid #4caf50 !important; /* Акцентная полоска слева (выглядит профессионально) */
-  transition: all 0.3s ease;            /* Плавное изменение цвета при наведении/изменении статуса */
-}
-
-/* Легкий эффект при наведении на выполненную задачу */
-.task-completed:hover {
-  background-color: #c8e6c9 !important;
-  cursor: pointer;
-}
-
-
-
-
-/* Мягкий светло-зеленый фон */
-.task-incompleted {
-  background-color: #e8f2f5 !important; /* Очень светлый, приятный глазу зеленый */
-  color: #000000 !important;            /* Темно-зеленый текст для хорошего контраста */
-  border-left: 4px solid #58d4f3 !important; /* Акцентная полоска слева (выглядит профессионально) */
-  transition: all 0.3s ease;            /* Плавное изменение цвета при наведении/изменении статуса */
-}
-
-/* Легкий эффект при наведении на выполненную задачу */
-.task-incompleted:hover {
-  background-color: #c8e5e6 !important;
-  cursor: pointer;
-}
-
-/* Когда цепочка выполнена, меняем переменные цвета кнопки аккордеона */
-.accordion-button.is-chain-completed {
-  /* Светло-зеленый фон (аналог bg-success-subtle) */
-  --bs-accordion-btn-bg: #d1e7dd !important;
-  /* Темно-зеленый текст для контраста */
-  --bs-accordion-btn-color: #0f5132 !important;
-  
-  /* Сохраняем эти цвета даже когда аккордеон раскрыт (active state) */
-  --bs-accordion-active-bg: #d1e7dd !important;
-  --bs-accordion-active-color: #0f5132 !important;
-  
-  /* Убираем стандартную синюю тень фокуса, заменяем на зеленую */
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
-}
-
-/* Опционально: меняем цвет стрелочки аккордеона на зеленый при выполнении */
-.accordion-button.is-chain-completed:not(.collapsed)::after {
-  filter: invert(39%) sepia(93%) saturate(441%) hue-rotate(84deg) brightness(90%) contrast(93%);
-}
-
-/* Легкий эффект при наведении на выполненную цепочку */
-.accordion-button.is-chain-completed:hover {
-  --bs-accordion-btn-bg: #bbf0c9 !important; /* Чуть темнее при наведении */
-}
-
-
-
-/* Адаптив */
-@media (max-width: 600px) {
-  .page-title {
-    font-size: 20px;
-  }
-  
-  .empty-state {
-    padding: 40px 20px;
-  }
-}
-
-/* === Секции === */
-.section {
-  margin-bottom: 32px;
-}
-
-.section-title {
-  font-size: 1.4rem;
-  color: #1f2937;
-  margin: 0 0 16px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.badge {
-  background: #e5e7eb;
-  color: #374151;
-  font-size: 0.85rem;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-}
-
-.no-standalone-hint {
-  color: #6b7280;
-  font-style: italic;
-  padding: 16px;
-  background: #f9fafb;
+.form-select {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
-}
-
-/* === Аккордеон цепочек === */
-.chains-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.chain-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #fff;
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.chain-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.chain-card.expanded {
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-.chain-header {
-  padding: 14px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
   cursor: pointer;
-  background: #f9fafb;
-  user-select: none;
 }
 
-.chain-header:hover {
-  background: #f3f4f6;
+.form-select:hover {
+  border-color: #cbd5e1;
 }
 
-.chain-header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.form-select:focus {
+  outline: none;
+  border-color: #0284c7;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
 }
 
-.chain-toggle-icon {
-  color: #6b7280;
-  font-size: 0.75rem;
+.select-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #64748b;
+  pointer-events: none;
   transition: transform 0.2s;
 }
 
-.chain-name {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #1f2937;
+.form-select:focus + .select-arrow {
+  transform: translateY(-50%) rotate(180deg);
+  color: #0284c7;
 }
 
-.chain-tasks-count {
-  color: #6b7280;
-  font-size: 0.85rem;
+/* ==========================================
+   3. КАСТОМНЫЙ АККОРДЕОН (ЦЕПОЧКИ)
+   ========================================== */
+.custom-accordion {
+  --bs-accordion-btn-icon: none;
+  --bs-accordion-btn-active-icon: none;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.custom-accordion .accordion-item {
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.custom-accordion .accordion-item:last-child {
+  border-bottom: none;
+}
+
+.custom-accordion .accordion-button {
+  padding: 18px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  background-color: #ffffff;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+  background-color: #f8fafc;
+  color: #0284c7;
+  box-shadow: inset 0 -1px 0 #e2e8f0 !important;
+}
+
+.custom-accordion .accordion-button:hover:not(.collapsed) {
+  background-color: #f1f5f9;
+}
+
+/* Состояние: вся цепочка выполнена */
+.accordion-button.is-chain-completed {
+  --bs-accordion-btn-bg: #f0fdf4 !important;
+  --bs-accordion-btn-color: #166534 !important;
+  --bs-accordion-active-bg: #f0fdf4 !important;
+  --bs-accordion-active-color: #166534 !important;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.05) !important;
+}
+
+.accordion-button.is-chain-completed:hover {
+  --bs-accordion-btn-bg: #dcfce7 !important;
+}
+
+.custom-accordion .accordion-body {
+  padding: 20px 24px;
+  background-color: #ffffff;
+}
+
+.chain-title-text {
+  font-size: 16px;
+}
+
+.chain-actions {
+  display: flex;
+  gap: 8px;
+  margin-right: 16px;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.btn-action.btn-primary {
+  color: #0284c7;
+}
+.btn-action.btn-primary:hover {
+  background: #e0f2fe;
+}
+
+.btn-action.btn-danger {
+  color: #ef4444;
+}
+.btn-action.btn-danger:hover {
+  background: #fee2e2;
+}
+
+.btn-edit {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+  padding: 15px;
 }
 
 .chain-deadline {
-  color: #dc2626;
-  font-size: 0.9rem;
+  font-size: 13px;
   font-weight: 500;
-}
-
-/* Тело цепочки */
-.chain-body {
-  padding: 12px 18px 18px;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
-}
-
-.chain-tasks {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  counter-reset: task-counter;
-}
-
-.chain-task-item {
-  counter-increment: task-counter;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  border-radius: 6px;
-  background: #f9fafb;
-  border-left: 3px solid #3b82f6;
+  gap: 6px;
 }
 
-.chain-task-item::before {
-  content: counter(task-counter) ".";
-  color: #6b7280;
-  margin-right: 10px;
+/* ==========================================
+   4. СПИСОК ЗАДАЧ ВНУТРИ АККОРДЕОНА
+   ========================================== */
+.custom-list {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.custom-list .list-group-item {
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 14px 20px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.custom-list .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.task-completed {
+  background-color: #f0fdf4 !important;
+  color: #166534 !important;
+  border-left: 4px solid #22c55e !important;
+}
+.task-completed:hover {
+  background-color: #dcfce7 !important;
+}
+
+.task-incompleted {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-left: 4px solid #0284c7 !important;
+}
+.task-incompleted:hover {
+  background-color: #f8fafc !important;
+}
+
+/* ==========================================
+   5. ГРУППИРОВКА И ПОДСКАЗКИ
+   ========================================== */
+.group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-count {
+  font-size: 13px;
+  color: #64748b;
   font-weight: 500;
-  min-width: 24px;
 }
 
-.chain-task-item.done {
-  opacity: 0.6;
-  border-left-color: #10b981;
+.info-hint {
+  color: #64748b;
+  font-size: 15px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
-.chain-task-item.locked {
-  border-left-color: #d1d5db;
-}
-
-.chain-task-title {
-  flex: 1;
-  color: #1f2937;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.chain-task-title:hover {
-  color: #3b82f6;
-  text-decoration: underline;
-}
-
-/* === Сетка отдельных задач === */
-.tasks-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+/* ==========================================
+   6. БОЛЬШИЕ ВКЛАДКИ (КАРТОЧКИ) ЗАДАЧ
+   ========================================== */
+.standalone-tasks-list {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-/* === Empty state === */
-.empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  background: #f9fafb;
+.large-task-card {
+  background: #ffffff;
   border-radius: 12px;
-  border: 2px dashed #d1d5db;
+  border: 1px solid #e2e8f0;
+  border-left-width: 5px;
+  border-left-style: solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.empty-text {
-  font-size: 1.2rem;
-  color: #374151;
-  margin: 0 0 8px 0;
+.large-task-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
 
-.empty-hint {
-  color: #6b7280;
-  margin: 0 0 20px 0;
-}
-
-.btn-create-first {
-  display: inline-block;
-  padding: 10px 20px;
-  background: #3b82f6;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.btn-create-first:hover {
-  background: #2563eb;
-}
+/* Цветовые акценты в зависимости от статуса */
+.large-task-card.status-open { border-left-color: #f59e0b; }
+.large-task-card.status-in_progress { border-left-color: #3b82f6; }
+.large-task-card.status-done { border-left-color: #22c55e; }

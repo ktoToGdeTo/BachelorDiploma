@@ -13,6 +13,4 @@ public class TasksChainDto {
     private String titleChain;
     private LocalDateTime deadlineTime;
     private List<TaskDto> tasksChain;
-
-
 }

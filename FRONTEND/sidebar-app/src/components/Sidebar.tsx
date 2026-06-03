@@ -37,19 +37,19 @@ const Sidebar: React.FC<SidebarProps> = ({
 
 
               {user?.roles?.includes("Администратор") && (
-                <div>
                   <li className="nav-item">
                     <a className="nav-link" onClick={() => onNavigate("/chain/create")}>
                       Создать цепочку
                     </a>
                   </li>
+                )}
+                {user?.roles?.includes("Администратор") && (
                   <li className="nav-item">
                     <a className="nav-link" onClick={() => onNavigate("/users/all")}>
                       Все пользователи
                     </a>
                   </li>
-                </div>
-              )}
+                )}
             </ul>
           </nav>
 

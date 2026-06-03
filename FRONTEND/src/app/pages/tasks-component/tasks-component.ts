@@ -9,11 +9,12 @@ import { ChainTasks } from '../../core/entity/chainTasks';
 import { FormsModule } from '@angular/forms';
 import { InfoTaskModal } from '../info-task-modal/info-task-modal';
 import { PluralPipe } from '../../core/pipes/plural-pipe';
+import { CdkDropList } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-tasks-component',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent, FormsModule, InfoTaskModal, PluralPipe],
+  imports: [CommonModule, TaskCardComponent, FormsModule, InfoTaskModal, PluralPipe, CdkDropList],
   templateUrl: './tasks-component.html',
   styleUrl: './tasks-component.css',
 })
@@ -218,6 +219,10 @@ toggleChain(chainId?: number): void {
       error: (err) => console.error('Ошибка удаления цепочки:', err),
       complete: () => this.cd.markForCheck()
     });
+  }
+
+  createTask(): void {
+    this.router.navigate(['/tasks/new']);
   }
 
   editChain(id: number): void {

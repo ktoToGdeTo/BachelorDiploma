@@ -1,162 +1,183 @@
-<h2 class="page-title">
-  Доступные задачи
-</h2>
+<div class="tasks-wrapper">
+  
+  <h2 class="page-title">
+    Доступные задачи
+  </h2>
 
-@if (allChains.length > 0) {
-<section class="section">
-  <h3 class="section-title">
-    Цепочки задач
-    <span class="badge">{{ allChains.length }}</span>
-  </h3>
+  <!-- === ЦЕПОЧКИ ЗАДАЧ === -->
+  @if (allChains.length > 0) {
+    <section class="section">
+      <h3 class="section-title">
+        Цепочки задач
+        <span class="badge-count">{{ allChains.length }}</span>
+      </h3>
 
-  <div class="accordion" id="chainsAccordion">
+      <div class="accordion custom-accordion" id="chainsAccordion">
+        @for (chain of allChains; track chain.id) {
+          <div class="accordion-item">
+            <h2 class="accordion-header" [id]="'heading-chain-' + chain.id">
+              <button class="accordion-button" 
+                    [class.collapsed]="!isChainExpanded(chain.id)" 
+                    [class.is-chain-completed]="isChainCompleted(chain)"
+                    type="button"
+                    (click)="toggleChain(chain.id)" 
+                    [attr.aria-expanded]="isChainExpanded(chain.id)"
+                    [attr.aria-controls]="'collapse-chain-' + chain.id">
 
-    @for (chain of allChains; track chain.id) {
-    <div class="accordion-item">
+                <span class="d-flex align-items-center gap-2 flex-grow-1">
+                  @if (isChainCompleted(chain)) {
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                  }
+                  <span class="chain-title-text">{{ chain.titleChain }}</span>
+                  <span class="badge-count light">
+                    {{ chain.tasksChain.length }} {{ chain.tasksChain.length | plural: ['задача', 'задачи', 'задач'] }}
+                  </span>
+                </span>
 
-      <!-- Заголовок цепочки (всегда виден) -->
-      <h2 class="accordion-header" [id]="'heading-chain-' + chain.id">
-        <button class="accordion-button" 
-              [class.collapsed]="!isChainExpanded(chain.id)" 
-              [class.is-chain-completed]="isChainCompleted(chain)"
-              type="button"
-              (click)="toggleChain(chain.id)" 
-              [attr.aria-expanded]="isChainExpanded(chain.id)"
-              [attr.aria-controls]="'collapse-chain-' + chain.id">
+                @if (authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])) {
+                  <div class="chain-actions">
+                    <button class="btn-action btn-danger" (click)="deleteChain(chain.id!)" title="Удалить цепочку">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button class="btn-action btn-primary" (click)="editChain(chain.id!)" title="Изменить цепочку">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                  </div>
+                }
 
-          <span class="d-flex align-items-center gap-2 flex-grow-1">
-            @if (isChainCompleted(chain)) {
-            <i class="bi bi-check-circle-fill text-success fs-5"></i>
-          }
-            <span class="fw-semibold">{{ chain.titleChain }}</span>
-            <span class="badge bg-light text-dark border">
-              {{ chain.tasksChain.length }} {{ chain.tasksChain.length | plural: ['задача', 'задачи', 'задач'] }}
-            </span>
-          </span>
+                @if (chain.deadlineTime) {
+                  <span class="chain-deadline">
+                    <i class="bi bi-clock"></i> {{ chain.deadlineTime | date:'dd.MM.yyyy' }}
+                  </span>
+                }
+              </button>
+            </h2>
 
-          @if (authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])) {
-          <button class="btn btn-outline-danger me-3" (click)="deleteChain(chain.id!)">
-            Удалить цепочку
-          </button>
-          <button class="btn btn-outline-primary me-3" (click)="editChain(chain.id!)">
-            Изменить цепочку
-          </button>
-          }
+            <div [id]="'collapse-chain-' + chain.id" class="accordion-collapse collapse"
+              [class.show]="isChainExpanded(chain.id)" [attr.aria-labelledby]="'heading-chain-' + chain.id"
+              data-bs-parent="#chainsAccordion">
+              
+              <div class="accordion-body">
+                <ol class="list-group list-group-numbered custom-list">
+                  @for (task of chain.tasksChain; track task.id) {
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                      [class.task-completed]="task.status === 'DONE'"
+                      [class.task-incompleted]="task.status !== 'DONE'">
 
-          @if (chain.deadlineTime) {
-          <span class="text-secondary small d-flex align-items-center gap-1 me-3">
-            <i class="bi bi-clock"></i> Дедлайн: {{ chain.deadlineTime | date:'dd.MM.yyyy' }}
-          </span>
-          }
-        </button>
-      </h2>
+                      <span class="flex-grow-1 cursor-pointer"
+                        (click)="openTaskDetails(task, chain)" 
+                        [title]="'Шаг ' + (task.chain_order! + 1)">
+                        {{ task.title }}
+                      </span>
+                    </li>
+                  }
+                </ol>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
 
-      <!-- Тело цепочки (раскрывается) -->
-      <div [id]="'collapse-chain-' + chain.id" class="accordion-collapse collapse"
-        [class.show]="isChainExpanded(chain.id)" [attr.aria-labelledby]="'heading-chain-' + chain.id"
-        data-bs-parent="#chainsAccordion">
-        <!-- Удалите эту строку, если хотите открывать несколько цепочек одновременно -->
+  <!-- === ПАНЕЛЬ УПРАВЛЕНИЯ === -->
+  @if (tasks.length > 0) {
+    <div class="controls-panel">
+      <div class="control-group">
+        <label for="sortField">Сортировать по:</label>
+        <div class="select-wrapper">
+          <select id="sortField" [(ngModel)]="sortField" class="form-select">
+            <option value="created_time">Дате создания</option>
+            <option value="modified_time">Дате изменения</option>
+            <option value="title">Имени (названию)</option>
+          </select>
+          <span class="select-arrow">▼</span>
+        </div>
 
-        <div class="accordion-body p-3">
+        <div class="select-wrapper">
+          <select [(ngModel)]="sortOrder" class="form-select">
+            <option value="desc">По убыванию</option>
+            <option value="asc">По возрастанию</option>
+          </select>
+          <span class="select-arrow">▼</span>
+        </div>
+      </div>
 
-          <ol class="list-group list-group-numbered">
-            @for (task of chain.tasksChain; track task.id) {
-            <li class="list-group-item d-flex justify-content-between align-items-center"
-              [class.task-completed]="task.status === 'DONE'"
-              [class.task-incompleted]="task.status !== 'DONE'">
-
-              <span class="flex-grow-1 cursor-pointer me-3 ps-2"
-                (click)="openTaskDetails(task, chain)" style="cursor: pointer;"
-                [title]="'Шаг ' + (task.chain_order! + 1)">
-                {{ task.title }}
-              </span>
-
-
-            </li>
+      <div class="control-group">
+        <label for="groupBy">Группировать по:</label>
+        <div class="select-wrapper">
+          <select id="groupBy" [(ngModel)]="groupBy" class="form-select">
+            <option value="none">Без группировки</option>
+            <option value="status">Статусу</option>
+            @if(authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])){
+              <option value="user">Пользователю</option>
             }
-          </ol>
-
+          </select>
+          <span class="select-arrow">▼</span>
         </div>
       </div>
     </div>
-    }
-  </div>
-</section>
-}
-
-<div>
-  @if(tasks.length > 0){
-  <div class="controls-panel">
-    <div class="control-group">
-      <label for="sortField">Сортировать по:</label>
-      <select id="sortField" [(ngModel)]="sortField" class="select-control">
-        <option value="created_time">Дате создания</option>
-        <option value="modified_time">Дате изменения</option>
-        <option value="title">Имени (названию)</option>
-      </select>
-
-      <select [(ngModel)]="sortOrder" class="select-control">
-        <option value="desc">По убыванию</option>
-        <option value="asc">По возрастанию</option>
-      </select>
-    </div>
-
-    <div class="control-group">
-      <label for="groupBy">Группировать по:</label>
-      <select id="groupBy" [(ngModel)]="groupBy" class="select-control">
-        <option value="none">Без группировки</option>
-        <option value="status">Статусу</option>
-        @if(authService.hasRoles(['ROLE_ADMIN', 'ROLE_MODERATOR'])){
-        <option value="user">Пользователю</option>
-        }
-      </select>
-    </div>
-  </div>
   }
 
+  <!-- === ОТДЕЛЬНЫЕ ЗАДАЧИ === -->
   <section class="section">
     <h3 class="section-title">
       Задачи вне цепочек
-      <span class="badge">{{ standaloneTasks.length }}</span>
+      <span class="badge-count">{{ standaloneTasks.length }}</span>
     </h3>
 
-    @if (standaloneTasks.length === 0 && taskChains.length === 0) {
-    <div class="empty-state">
-      <p class="empty-text">Задач пока нет</p>
-      <p class="empty-hint">Создайте первую задачу, чтобы начать работу!</p>
-      <a href="/tasks/new" class="btn-create-first">Создать задачу</a>
-    </div>
+    @if (standaloneTasks.length === 0 && allChains.length === 0) {
+      <div class="empty-state">
+        <p class="empty-text">Задач пока нет</p>
+        <p class="empty-hint">Создайте первую задачу, чтобы начать работу!</p>
+        <button class="btn-edit" (click)="createTask()">
+          <i class="bi bi-plus-lg"></i> Создать задачу
+        </button>        
+      </div>
     } @else if (standaloneTasks.length === 0) {
-    <p class="no-standalone-hint">Все задачи входят в цепочки</p>
+      <div class="info-hint">
+        <i class="bi bi-info-circle me-2"></i> Все задачи распределены по цепочкам
+      </div>
     } @else {
-    <div>
-      @for (group of processedTasks; track group.key) {
-
-      @if (groupBy !== 'none') {
-      <h3 class="group-title">
-        @switch (group.key) {
-        @case ('OPEN') { Открыто }
-        @case ('CLOSED') { Закрыто }
-        @case ('IN_PROGRESS') { В процессе }
-        @case ('DONE') { Завершено }
-        @default { {{ group.key }} }
-        }
-        <span class="group-count">({{ group.tasks.length }})</span>
-      </h3>
-      }
-      <div>
-        @for (task of group.tasks; track task.id) {
-        <app-task-card-component [task]="task" (deleteTask)="deleteTask($event)" (changeTask)="updateTask($event)">
-        </app-task-card-component>
+      <div class="tasks-grid">
+        @for (group of processedTasks; track group.key) {
+          @if (groupBy !== 'none') {
+            <h4 class="group-title">
+              @switch (group.key) {
+                @case ('OPEN') {  Открыто }
+                @case ('CLOSED') {  Закрыто }
+                @case ('IN_PROGRESS') {  В процессе }
+                @case ('DONE') {  Завершено }
+                @default { {{ group.key }} }
+              }
+              <span class="group-count">({{ group.tasks.length }})</span>
+            </h4>
+          }
+          
+          <div class="group-tasks">
+            @for (task of group.tasks; track task.id) {
+              <app-task-card-component 
+                [task]="task" 
+                (deleteTask)="deleteTask($event)" 
+                (changeTask)="updateTask($event)">
+              </app-task-card-component>
+            }
+          </div>
         }
       </div>
-      }
-    </div>
     }
   </section>
 
+  <!-- === МОДАЛЬНОЕ ОКНО === -->
   @if (selectedTask) {
-  <app-info-task-modal [task]="selectedTask" [chain]="selectedTaskChain" (confirm)="confirmTask($event)"
-    (close)="closeModal()" (change)="updateTask($event)" (delete)="deleteTask($event)">
-  </app-info-task-modal>
+    <app-info-task-modal 
+      [task]="selectedTask" 
+      [chain]="selectedTaskChain" 
+      (confirm)="confirmTask($event)"
+      (close)="closeModal()" 
+      (change)="updateTask($event)" 
+      (delete)="deleteTask($event)">
+    </app-info-task-modal>
   }
+
+</div>

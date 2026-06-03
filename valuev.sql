@@ -4,7 +4,7 @@ insert into task_status values (1, 'OPEN'), (2, 'CLOSED'), (3, 'IN_PROGRESS'), (
 
 select * from role;
 select * from task_status;
-
+select * from users_roles
 insert into users (first_name, last_name, username, password, birth_date, register_date)
 values ('Mike', 'Smith', 'mikeSmith2020', '123', '2000-02-01', '2026-05-21')
 

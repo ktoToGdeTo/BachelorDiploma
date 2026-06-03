@@ -145,54 +145,39 @@ public class TaskService {
         return chain.map(this::toChainDto).get();
     }
 
-    public TasksChain updateChain(Long chainId, TasksChainDto dto) {
-        // 1. Находим цепочку
+    public void updateChain(Long chainId, TasksChainDto dto) {
         TasksChain chain = taskChainRepository.findById(chainId)
                 .orElseThrow(() -> new RuntimeException("Цепочка не найдена"));
 
-        // 2. Обновляем поля самой цепочки
         chain.setTitleChain(dto.getTitleChain());
         chain.setDeadlineTime(dto.getDeadlineTime());
 
-        // 3. Собираем Map существующих задач для быстрого поиска по ID
-        // ВАЖНО: Так как в сущности Task поле id имеет тип long (примитив),
-        // у новых задач (которые еще не в БД) оно равно 0. Поэтому фильтруем по > 0.
         Map<Long, Task> existingTasksMap = chain.getTasksChain().stream()
                 .filter(task -> task.getId() > 0)
                 .collect(Collectors.toMap(Task::getId, Function.identity()));
 
-        // Множество ID задач, которые пришли с фронта (чтобы потом понять, какие удалить)
         Set<Long> incomingTaskIds = new HashSet<>();
-        int order = 0; // Счетчик для сохранения нового порядка (Drag&Drop)
+        int order = 0;
 
-        // 4. Проходимся по задачам из DTO (в том порядке, в котором их перетащил пользователь)
         for (TaskDto taskDto : dto.getTasksChain()) {
 
-            // В DTO поле id должно быть Long (объект), чтобы можно было проверить на null
             if (taskDto.getId() != null && existingTasksMap.containsKey(taskDto.getId())) {
 
-                // --- ВАРИАНТ А: ЗАДАЧА УЖЕ СУЩЕСТВУЕТ -> ОБНОВЛЯЕМ ЕЁ ---
                 Task existingTask = existingTasksMap.get(taskDto.getId());
 
                 existingTask.setTitle(taskDto.getTitle());
                 existingTask.setDescription(taskDto.getDescription());
-                existingTask.setChangedTime(LocalDateTime.now()); // Обновляем время изменения
-                existingTask.setChainOrder(order);                // Сохраняем новый порядок
+                existingTask.setChangedTime(LocalDateTime.now());
+                existingTask.setChainOrder(order);
 
-                // Обновляем исполнителя, если он изменился
                 if (taskDto.getCreated_by() != null) {
-                    // Адаптируйте этот поиск под ваш репозиторий (по ID или по username)
                     User user = userRepository.findByUsername(taskDto.getCreated_by())
                             .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
                     existingTask.setUser(user);
                 }
-
-                // Запоминаем, что эта задача пришла с фронта
                 incomingTaskIds.add(taskDto.getId());
 
             } else {
-
-                // --- ВАРИАНТ Б: ЗАДАЧИ НЕТ В БД -> СОЗДАЕМ НОВУЮ ---
                 Task newTask = new Task();
                 newTask.setTitle(taskDto.getTitle());
                 newTask.setDescription(taskDto.getDescription());
@@ -200,35 +185,18 @@ public class TaskService {
                 newTask.setChangedTime(LocalDateTime.now());
                 newTask.setChainOrder(order);
 
-                // Устанавливаем статус по умолчанию (если нужно, раскомментируйте)
-                // newTask.setStatus(defaultTaskStatus);
-
-                // Устанавливаем исполнителя
                 if (taskDto.getCreated_by() != null) {
                     User user = userRepository.findByUsername(taskDto.getCreated_by())
                             .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
                     newTask.setUser(user);
                 }
 
-                // ИСПОЛЬЗУЕМ ВАШ МЕТОД addTask!
-                // Он сам корректно установит двустороннюю связь (newTask.setChain(this))
                 chain.addTask(newTask);
             }
-
-            order++; // Увеличиваем порядок для следующей задачи
+            order++;
         }
-
-        // 5. УДАЛЕНИЕ ЗАДАЧ (Магия orphanRemoval = true)
-        // Нам НЕ НУЖНО вызывать taskRepository.delete().
-        // Достаточно просто удалить задачу из коллекции chain.getTasksChain().
-        // При сохранении цепочки Hibernate сам выполнит DELETE в базе для "осиротевших" задач.
         chain.getTasksChain().removeIf(task -> !incomingTaskIds.contains(task.getId()));
 
-        // 6. Сохраняем цепочку.
-        // Благодаря cascade = CascadeType.ALL, Hibernate сам:
-        // - Обновит существующие задачи
-        // - Вставит новые задачи (INSERT)
-        // - Удалит те, что мы убрали из списка (DELETE)
-        return taskChainRepository.save(chain);
+        taskChainRepository.save(chain);
     }
 }
